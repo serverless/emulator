@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  node:
+    image: node:latest
+    working_dir: /app
+    volumes:
+      - .:/app
+    expose:
+      - '8080'
+    ports:
+      - '8080:8080'
