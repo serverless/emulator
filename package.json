@@ -13,7 +13,9 @@
     "emulator": "./bin/emulator"
   },
   "dependencies": {
-    "babel-polyfill": "^6.23.0"
+    "babel-polyfill": "^6.23.0",
+    "bluebird": "^3.5.0",
+    "ramda": "^0.24.1"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
