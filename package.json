@@ -1,0 +1,30 @@
+{
+  "name": "serverless-local-emulator",
+  "version": "0.1.0",
+  "license": "MIT",
+  "scripts": {
+    "build": "rm -rf dist && mkdir -p dist && ./node_modules/.bin/babel src -d dist --source-maps",
+    "lint": "eslint . --cache",
+    "test": "jest",
+    "watch": "rm -rf dist && mkdir -p dist && ./node_modules/.bin/babel -w src -d dist --source-maps",
+    "start": "node dist/index.js"
+  },
+  "bin": {
+    "emulator": "./bin/emulator"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.23.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-preset-stage-1": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-preset-stage-3": "^6.24.1",
+    "eslint": "^4.2.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.7.0",
+    "jest": "^20.0.4"
+  }
+}
