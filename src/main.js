@@ -10,7 +10,7 @@ import {
   createFunctionJson,
   loadFunctionJson,
   loadAwsEnvVars,
-  invokeNode,
+  invokeNode,a
 } from './utils/utils';
 
 const HOSTNAME = 'localhost';
@@ -28,7 +28,7 @@ async function run() {
       const funcConfig = functionObj.config;
       const zipFile = functionObj.zipFile;
 
-      const expectedProps = ['serviceName', 'functionName', 'config', 'zipFile'];
+      const expectedProps = ['serviceName', 'functionName', 'config'];
       validateFunction(functionObj, expectedProps);
 
       const funcDirPath = await createFunctionDirectory(serviceName, functionName);

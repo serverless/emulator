@@ -22,7 +22,10 @@ function validateFunction() {
  *   functionName - string
  * return Promise(functionDirectoryPath)
   */
-async function createFunctionDirectory() {
+async function createFunctionDirectory(serviceName, functionName) {
+  const functionsDirPath = '';
+
+
   return Promise.resolve();
 }
 
