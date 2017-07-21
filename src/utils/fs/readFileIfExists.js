@@ -12,4 +12,4 @@ const readFileIfExists = function (filePath) {
     });
 };
 
-module.exports = readFileIfExists;
+export default readFileIfExists;

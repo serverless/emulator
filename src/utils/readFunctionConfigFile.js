@@ -1,5 +1,3 @@
-'use strict';
-
 import readFile from './fs/readFile';
 import getFunctionConfigFilePath from './getFunctionConfigFilePath';
 
@@ -8,5 +6,5 @@ async function readFunctionConfigFile(serviceName, functionName) {
   return readFile(functionConfigFilePath);
 }
 
-module.exports = readFunctionConfigFile;
+export default readFunctionConfigFile;
 

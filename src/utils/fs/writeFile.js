@@ -1,5 +1,3 @@
-'use strict';
-
 const path = require('path');
 const YAML = require('js-yaml');
 const fse = require('./fse');
@@ -24,4 +22,4 @@ async function writeFile(filePath, conts) {
     });
 }
 
-module.exports = writeFile;
+export default writeFile;

@@ -1,5 +1,3 @@
-'use strict';
-
 import path from 'path';
 import getFunctionsDirectoryPath from './getFunctionsDirectoryPath';
 
@@ -11,5 +9,5 @@ function getFunctionConfigFilePath(serviceName, functionName) {
   return functionConfigFilePath;
 }
 
-module.exports = getFunctionConfigFilePath;
+export default getFunctionConfigFilePath;
 

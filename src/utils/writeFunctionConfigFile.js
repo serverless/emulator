@@ -1,5 +1,3 @@
-'use strict';
-
 import writeFile from './fs/writeFile';
 import getFunctionConfigFilePath from './getFunctionConfigFilePath';
 
@@ -8,5 +6,5 @@ async function writeFunctionJsonFile(functionConfig, serviceName, functionName) 
   return writeFile(functionConfigFilePath, functionConfig);
 }
 
-module.exports = writeFunctionJsonFile;
+export default writeFunctionJsonFile;
 

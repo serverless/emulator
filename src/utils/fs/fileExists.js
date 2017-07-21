@@ -1,5 +1,3 @@
-'use strict';
-
 const fse = require('./fse');
 
 function fileExists(filePath) {
@@ -8,4 +6,4 @@ function fileExists(filePath) {
     .catch(() => false);
 }
 
-module.exports = fileExists;
+export default fileExists;

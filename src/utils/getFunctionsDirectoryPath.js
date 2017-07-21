@@ -1,5 +1,3 @@
-'use strict';
-
 import path from 'path';
 
 function getFunctionsDirectoryPath() {
@@ -7,5 +5,4 @@ function getFunctionsDirectoryPath() {
   return '';
 }
 
-module.exports = getFunctionsDirectoryPath;
-
+export default getFunctionsDirectoryPath;

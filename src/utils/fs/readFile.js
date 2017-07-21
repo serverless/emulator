@@ -1,5 +1,3 @@
-'use strict';
-
 const fse = require('./fse');
 const parse = require('./parse');
 
@@ -8,4 +6,4 @@ async function readFile(filePath) {
     .then((contents) => parse(filePath, contents));
 }
 
-module.exports = readFile;
+export default readFile;
