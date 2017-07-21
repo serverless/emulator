@@ -31,8 +31,8 @@ async function run() {
     },
   };
 
-  app.use(router.post('/functions', functions.deploy));
-  app.use(router.post('/functions/invoke', functions.invoke));
+  app.use(router.post('v0/emulator/api/functions', functions.deploy));
+  app.use(router.post('v0/emulator/api/functions/invoke', functions.invoke));
 
   app.listen(PORT, () => {
     // eslint-disable-next-line
