@@ -1,3 +1,8 @@
+'use strict';
+
+import path from 'path';
+import writeFile from './fs/writeFile';
+
 /**
  * params
  *   functionObj - object
@@ -22,11 +27,12 @@ function validateFunction() {
  *   functionName - string
  * return Promise(functionDirectoryPath)
   */
-async function createFunctionDirectory(serviceName, functionName) {
+async function writeFunctionJsonFile(functionConfig, serviceName, functionName) {
   const functionsDirPath = '';
+  const functionConfigFilePath = path.join(functionsDirPath,
+    serviceName, functionName, 'function.json');
 
-
-  return Promise.resolve();
+  return writeFile(functionConfigFilePath, functionConfig);
 }
 
 /**
