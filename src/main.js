@@ -3,6 +3,15 @@
 import Koa from 'koa';
 import router from 'koa-route';
 import bodyParser from 'koa-bodyparser';
+import {
+  validateFunction,
+  createFunctionDirectory,
+  unzip,
+  createFunctionJson,
+  loadFunctionJson,
+  loadAwsEnvVars,
+  invokeNode,
+} from './utils/utils';
 
 const HOSTNAME = 'localhost';
 const PORT = 8080;
@@ -13,6 +22,19 @@ async function run() {
 
   const functions = {
     deploy: async (ctx) => {
+      const functionObj = ctx.request.body;
+      const serviceName = functionObj.serviceName;
+      const functionName = functionObj.functionName;
+      const funcConfig = functionObj.config;
+      const zipFile = functionObj.zipFile;
+
+      const expectedProps = ['serviceName', 'functionName', 'config', 'zipFile'];
+      validateFunction(functionObj, expectedProps);
+
+      const funcDirPath = await createFunctionDirectory(serviceName, functionName);
+      const unzippedContent = await unzip(zipFile, serviceName, functionName);
+      const funcJsonPath = await createFunctionJson(funcDirPath, funcConfig);
+
       ctx.response.type = 'json';
       ctx.body = {
         resource: 'functions',
@@ -22,6 +44,18 @@ async function run() {
     },
 
     invoke: async (ctx) => {
+      const functionObj = ctx.request.body;
+      const serviceName = functionObj.serviceName;
+      const functionName = functionObj.functionName;
+      const payload = functionObj.payload;
+
+      const expectedProps = ['serviceName', 'functionName'];
+      validateFunction(functionObj, expectedProps);
+
+      const funcConfig = await loadFunctionJson(serviceName, functionName);
+      const envObj = await loadAwsEnvVars(funcConfig);
+      const output = await invokeNode(serviceName, functionName, payload)
+
       ctx.response.type = 'json';
       ctx.body = {
         resource: 'functions',
