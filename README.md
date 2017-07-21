@@ -2,19 +2,17 @@
 
 > Emulate your Serverless functions locally.
 
----
-
-1. [Getting started](#getting-started)
-2. [Development](#development)
-3. [Functionality](#functionality)
-  - 3.1 [General](#general)
-  - 3.2 [Deployment](#deployment)
-  - 3.3 [Invocation](#invocation)
-  - 3.4 [Middlewares](#middlewares)
-4. [APIs](#apis)
-  - 4.1 [HTTP API](#http-api)
-    + 4.1.1 [Deploy function](#deploy-function)
-    + 4.1.2 [Invoke function](#invoke-function)
+- [Getting started](#getting-started)
+- [Development](#development)
+- [Functionality](#functionality)
+  + [General](#general)
+    + [Deployment](#deployment)
+    + [Invocation](#invocation)
+    + [Middlewares](#middlewares)
+- [APIs](#apis)
+  + [HTTP API](#http-api)
+    + [Deploy function](#deploy-function)
+    + [Invoke function](#invoke-function)
 
 ---
 
@@ -148,6 +146,7 @@ Request:
 - `serviceName` - `string` - **required** The service the function belongs to
 - `config` - `object`: - **required** Additional function configuration
   + `handler` - `string` - **require** The exported function which should be used
+  + `...` Any additional (meta)data which is important for the function
 - `data` - `buffer` - **required** The zip file data which contains the functions code
 
 Response:
