@@ -57,16 +57,17 @@ On every function deployment the following happens behind the scenes:
 ```
 |__ storage
     |__ functions
-        |__ <name-of-service>-<name-of-function>
-            |__ code
-            |__ function.json
+        |__ <service-name>
+            |__ <function-name>
+                |__ code
+                |__ function.json
 ```
 
 The root directory is the `storage` directory. It's a place where all artifacts will be stored.
 
-The `functions` directory is the place where all the function related artifacts are stored.
+The `functions` directory is the place where all the function-related artifacts are stored.
 
-For each function, a directory which is named after the service- and function name is created.
+A directory for the specific service is created and contains dedicated directories for each function.
 
 The `code` directory is the place where the actual function code is stored (the unzipped content of the submitted `.zip` file).
 
@@ -78,7 +79,7 @@ The proposed directory structure makes it easy for the Local Emulator to follow 
 
 ### Invocation
 
-When invoking a function the Local Emulator will simply look for a directory which contains the service- and function name (see above how this name is constructed), determines the runtime based on the file extension of the function handler which is found in `function.json` and starts the execution phase which will happen in a dedicated child process (more on that later).
+When invoking a function the Local Emulator will simply look for the function directory (see above how the naming schema helps with the lookup), determines the runtime based on the file extension of the function handler which is found in `function.json` and starts the execution phase which will happen in a dedicated child process (more on that later).
 
 The invocation data is extracted from the incoming requested and passed to a so-called `wrapper` script via `stdin`. The wrapper script is an implementation of language specific logic and functionality and is written in the target runtime language. It's responsible to setup the execution environment, require the function and pass the event payload to the function (you can think of it as a language specific container). Furthermore it will marshall the returned data and pass it back to the Local Emulators parent process which will then transform it into a JSON format and sends it back via a HTTP response.
 
