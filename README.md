@@ -19,9 +19,10 @@
 ## Getting started
 
 1. Clone the repository
-2. Run `npm install` to install all dependencies
-3. Run `npm build` to build the project (the build artifacts can be found in `dist`)
-4. Run `npm start` to start the emulator
+1. Run `npm install` to install all dependencies
+1. Run `scripts/sync-storage` to sync the example artifacts with the Local Emulators `storage` location
+1. Run `npm build` to build the project (the build artifacts can be found in `dist`)
+1. Run `npm start` to start the emulator
 
 ## Development
 
