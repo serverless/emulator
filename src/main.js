@@ -3,15 +3,11 @@
 import Koa from 'koa';
 import router from 'koa-route';
 import bodyParser from 'koa-bodyparser';
-import {
-  validateFunction,
-  createFunctionDirectory,
-  unzip,
-  createFunctionJson,
-  loadFunctionJson,
-  loadAwsEnvVars,
-  invokeNode,
-} from './utils/utils';
+
+import validateServiceName from './utils/validateServiceName';
+import validateFunctionName from './utils/validateFunctionName';
+import writeFunctionConfigFile from './utils/writeFunctionConfigFile';
+import readFunctionConfigFile from './utils/readFunctionConfigFile';
 
 const HOSTNAME = 'localhost';
 const PORT = 8080;
@@ -23,17 +19,11 @@ async function run() {
   const functions = {
     deploy: async (ctx) => {
       const functionObj = ctx.request.body;
-      const serviceName = functionObj.serviceName;
-      const functionName = functionObj.functionName;
-      const funcConfig = functionObj.config;
-      const zipFile = functionObj.zipFile;
+      const serviceName = validateServiceName(functionObj.serviceName);
+      const functionName = validateFunctionName(functionObj.functionName);
+      const functionConfig = functionObj.config;
 
-      const expectedProps = ['serviceName', 'functionName', 'config', 'zipFile'];
-      validateFunction(functionObj, expectedProps);
-
-      const funcDirPath = await createFunctionDirectory(serviceName, functionName);
-      const unzippedContent = await unzip(zipFile, serviceName, functionName);
-      const funcJsonPath = await createFunctionJson(funcDirPath, funcConfig);
+      await writeFunctionConfigFile(functionConfig, serviceName, functionName);
 
       ctx.response.type = 'json';
       ctx.body = {
@@ -45,16 +35,13 @@ async function run() {
 
     invoke: async (ctx) => {
       const functionObj = ctx.request.body;
-      const serviceName = functionObj.serviceName;
-      const functionName = functionObj.functionName;
+      const serviceName = validateServiceName(functionObj.serviceName);
+      const functionName = validateFunctionName(functionObj.functionName);
       const payload = functionObj.payload;
 
-      const expectedProps = ['serviceName', 'functionName'];
-      validateFunction(functionObj, expectedProps);
-
-      const funcConfig = await loadFunctionJson(serviceName, functionName);
-      const envObj = await loadAwsEnvVars(funcConfig);
-      const output = await invokeNode(serviceName, functionName, payload)
+      const functionConfig = await readFunctionConfigFile(serviceName, functionName);
+      // const envObj = await loadAwsEnvVars(funcConfig);
+      // const output = await invokeNode(serviceName, functionName, payload)
 
       ctx.response.type = 'json';
       ctx.body = {
