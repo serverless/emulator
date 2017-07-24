@@ -1,7 +1,4 @@
-import path from 'path';
-
 function getFunctionsDirectoryPath() {
-
   return '';
 }
 

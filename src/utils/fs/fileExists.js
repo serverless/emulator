@@ -1,8 +1,8 @@
-const fse = require('./fse');
+import fse from './fse';
 
 function fileExists(filePath) {
   return fse.lstatAsync(filePath)
-    .then((stats) => stats.isFile())
+    .then(stats => stats.isFile())
     .catch(() => false);
 }
 

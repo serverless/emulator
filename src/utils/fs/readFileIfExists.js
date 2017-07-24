@@ -1,6 +1,6 @@
-const fileExists = require('./fileExists');
-const readFile = require('./readFile');
-const BbPromise = require('bluebird');
+import BbPromise from 'bluebird';
+import fileExists from './fileExists';
+import readFile from './readFile';
 
 const readFileIfExists = function (filePath) {
   return fileExists(filePath)

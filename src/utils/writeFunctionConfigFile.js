@@ -7,4 +7,3 @@ async function writeFunctionJsonFile(functionConfig, serviceName, functionName) 
 }
 
 export default writeFunctionJsonFile;
-

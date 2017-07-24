@@ -1,4 +1,6 @@
-const BbPromise = require('bluebird');
-const fse = BbPromise.promisifyAll(require('fs-extra'));
+import fsExtra from 'fs-extra';
+import BbPromise from 'bluebird';
+
+const fse = BbPromise.promisifyAll(fsExtra);
 
 export default fse;

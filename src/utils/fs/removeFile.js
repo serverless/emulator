@@ -1,4 +1,4 @@
-const fse = require('./fse');
+import fse from './fse';
 
 function removeFile(filePath) {
   return fse.removeAsync(filePath);

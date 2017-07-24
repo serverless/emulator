@@ -1,6 +1,6 @@
-const path = require('path');
-const YAML = require('js-yaml');
-const fse = require('./fse');
+import path from 'path';
+import YAML from 'js-yaml';
+import fse from './fse';
 
 async function writeFile(filePath, conts) {
   let contents = conts || '';

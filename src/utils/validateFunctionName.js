@@ -6,4 +6,3 @@ function validateFunctionName(functionName) {
 }
 
 export default validateFunctionName;
-

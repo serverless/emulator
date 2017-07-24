@@ -7,4 +7,3 @@ async function readFunctionConfigFile(serviceName, functionName) {
 }
 
 export default readFunctionConfigFile;
-

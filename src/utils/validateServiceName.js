@@ -6,4 +6,3 @@ function validateServiceName(serviceName) {
 }
 
 export default validateServiceName;
-

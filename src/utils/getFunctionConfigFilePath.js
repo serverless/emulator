@@ -10,4 +10,3 @@ function getFunctionConfigFilePath(serviceName, functionName) {
 }
 
 export default getFunctionConfigFilePath;
-
