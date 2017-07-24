@@ -1,0 +1,6 @@
+#!/bin/bash
+
+rm -rf ~/.serverless/local-emulator
+mkdir -p ~/.serverless/local-emulator/storage
+
+cp -r ./storage/functions ~/.serverless/local-emulator/storage/functions
