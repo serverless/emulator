@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "license": "MIT",
   "scripts": {
-    "build": "rm -rf dist && mkdir -p dist && ./node_modules/.bin/babel src -d dist --source-maps",
+    "build": "rm -rf dist && mkdir -p dist && babel src -d dist --source-maps",
     "lint": "eslint . --cache",
     "test": "jest",
-    "watch": "rm -rf dist && mkdir -p dist && ./node_modules/.bin/babel -w src -d dist --source-maps",
+    "watch": "rm -rf dist && mkdir -p dist && babel -w src -d dist --source-maps",
     "start": "node dist/index.js"
   },
   "bin": {
