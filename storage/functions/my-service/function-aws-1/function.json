@@ -1,4 +1,5 @@
 {
   "handler": "hello-world/helloWorld",
-  "provider": "aws"
+  "provider": "aws",
+  "runtime": "nodejs6.10"
 }
