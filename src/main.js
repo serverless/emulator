@@ -1,13 +1,14 @@
-/* eslint-disable import/first */
+/* eslint-disable max-len */
 
 import Koa from 'koa';
 import router from 'koa-route';
 import bodyParser from 'koa-bodyparser';
-
 import validateServiceName from './utils/validateServiceName';
 import validateFunctionName from './utils/validateFunctionName';
 import writeFunctionConfigFile from './utils/writeFunctionConfigFile';
 import readFunctionConfigFile from './utils/readFunctionConfigFile';
+import setupExecutionEnvironment from './utils/setupExecutionEnvironment';
+import invokeFunction from './utils/invokeFunction';
 
 const HOSTNAME = 'localhost';
 const PORT = 8080;
@@ -40,14 +41,16 @@ async function run() {
       const payload = functionObj.payload;
 
       const functionConfig = await readFunctionConfigFile(serviceName, functionName);
-      // const envObj = await loadAwsEnvVars(funcConfig);
-      // const output = await invokeNode(serviceName, functionName, payload)
+      const spawnedProc = await setupExecutionEnvironment(serviceName, functionName, functionConfig);
+      const output = await invokeFunction(spawnedProc, payload);
+
+      const data = JSON.parse(output);
 
       ctx.response.type = 'json';
       ctx.body = {
         resource: 'functions',
         method: 'invoke',
-        data: ctx.request.body,
+        data,
       };
     },
   };

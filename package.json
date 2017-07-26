@@ -20,6 +20,7 @@
     "koa": "^2.3.0",
     "koa-bodyparser": "^4.2.0",
     "koa-route": "^3.2.0",
+    "minimist": "^1.2.0",
     "ramda": "^0.24.1"
   },
   "devDependencies": {
