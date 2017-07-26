@@ -10,7 +10,7 @@
     "start": "node dist/index.js"
   },
   "bin": {
-    "emulator": "./bin/emulator"
+    "sle": "./bin/emulator"
   },
   "dependencies": {
     "babel-polyfill": "^6.23.0",

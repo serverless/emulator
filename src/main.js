@@ -21,12 +21,21 @@ async function run() {
   const options = R.omit(['_'], argv);
   const port = options.port || 8080;
 
+  const ping = async (ctx) => {
+    ctx.response.type = 'json';
+    ctx.body = {
+      id: 'serverless-local-emulator',
+    };
+  };
+
   const functions = {
     deploy: async (ctx) => {
       const functionObj = ctx.request.body;
       const serviceName = validateServiceName(functionObj.serviceName);
       const functionName = validateFunctionName(functionObj.functionName);
       const functionConfig = functionObj.config;
+
+      console.log(`Received ${functionName} Function`);
 
       await writeFunctionConfigFile(functionConfig, serviceName, functionName);
 
@@ -59,6 +68,7 @@ async function run() {
     },
   };
 
+  app.use(router.get('/ping', ping));
   app.use(router.post('/v0/emulator/api/functions', functions.deploy));
   app.use(router.post('/v0/emulator/api/functions/invoke', functions.invoke));
 
