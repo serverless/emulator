@@ -32,6 +32,23 @@ Additionally you can use Docker to run and develop everything inside a container
 
 Spinning up the Docker container is as easy as `docker-compose run -p 8080:8080 node bash`.
 
+## Using the Local Emulator
+
+The following documents provide some insights on how configure and use the Local Emulator.
+
+### Options
+
+The Local Emulator can be configured with the following options you can pass in via the CLI:
+
+- `--port` - `number` - Optional port (defaults to `8080`)
+
+### Starting the Local Emulator
+
+| Command | Description |
+| --- | --- |
+| `npm start` | Will start the Local Emulator at `localhost` with the default port |
+| `npm start -- --port 4711` | Starts the local Emulator at `localhost` with the port `4711` |
+
 ## Functionality
 
 ### General

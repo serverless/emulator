@@ -3,6 +3,8 @@
 import Koa from 'koa';
 import router from 'koa-route';
 import bodyParser from 'koa-bodyparser';
+import minimist from 'minimist';
+import R from 'ramda';
 import validateServiceName from './utils/validateServiceName';
 import validateFunctionName from './utils/validateFunctionName';
 import writeFunctionConfigFile from './utils/writeFunctionConfigFile';
@@ -10,12 +12,14 @@ import readFunctionConfigFile from './utils/readFunctionConfigFile';
 import setupExecutionEnvironment from './utils/setupExecutionEnvironment';
 import invokeFunction from './utils/invokeFunction';
 
-const HOSTNAME = 'localhost';
-const PORT = 8080;
-
 async function run() {
   const app = new Koa();
   app.use(bodyParser());
+
+  // use options if provided
+  const argv = minimist(process.argv.slice(2));
+  const options = R.omit(['_'], argv);
+  const port = options.port || 8080;
 
   const functions = {
     deploy: async (ctx) => {
@@ -58,9 +62,9 @@ async function run() {
   app.use(router.post('/v0/emulator/api/functions', functions.deploy));
   app.use(router.post('/v0/emulator/api/functions/invoke', functions.invoke));
 
-  app.listen(PORT, () => {
+  app.listen(port, () => {
     // eslint-disable-next-line
-    console.log(`Serverless Local Emulator Daemon listening at ${HOSTNAME}:${PORT}...`);
+    console.log(`Serverless Local Emulator Daemon listening at localhost:${port}...`);
   });
 }
 
