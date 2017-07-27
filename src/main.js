@@ -18,6 +18,17 @@ async function run() {
   const app = new Koa();
   app.use(bodyParser());
 
+  // global error-handling middleware
+  app.use(async (ctx, next) => {
+    try {
+      await next();
+    } catch (err) {
+      ctx.status = err.status || 500;
+      ctx.body = err.message;
+      ctx.app.emit('error', err, ctx);
+    }
+  });
+
   // use options if provided
   const argv = minimist(process.argv.slice(2));
   const options = R.omit(['_'], argv);
