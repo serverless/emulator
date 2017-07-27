@@ -55,15 +55,13 @@ async function run() {
 
       const functionConfig = await readFunctionConfigFile(serviceName, functionName);
       const spawnedProc = await setupExecutionEnvironment(serviceName, functionName, functionConfig);
-      const output = await invokeFunction(spawnedProc, payload);
-
-      const data = JSON.parse(output);
+      const result = await invokeFunction(serviceName, functionName, functionConfig, spawnedProc, payload);
 
       ctx.response.type = 'json';
       ctx.body = {
         resource: 'functions',
         method: 'invoke',
-        data,
+        data: result,
       };
     },
   };

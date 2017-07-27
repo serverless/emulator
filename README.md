@@ -117,25 +117,47 @@ echo '{ "service": "my-service", "function": "my-function", "payload": { "event"
 
 ### Middlewares
 
-The Local Emulator provides a middleware concept which makes it possible to use own, custom code to modify the way the Local Emulator handles and passes the data to the functions and back from the functions to the invoker.
+The Local Emulator provides a middleware concept which makes it possible to use custom code to modify the data which is used inside the Local Emulator when exercising core logic (e.g. setting up the execution environment, invoking functions, etc.).
+
+The core Local Emulators `runMiddleware` functionality ensures that the raw data object which is passed into it will be copied over into a `payload` object and removed from the root of the object. Furthermore it creates a blank `result` object which can be used by middlewares to store the computed results.
+
+Let's take a quick look at an example to see how this works behind the scenes.
+
+We assume that the data which is passed into the Local Emulators `runMiddleware` function has the following shape:
+
+```javascript
+{
+  foo: 'bar',
+  baz: 'qux'
+};
+```
+
+The data will be prepared and passed into the middlewares in the following format:
+
+```javascript
+{
+  payload: {
+    foo: 'bar',
+    baz: 'qux'
+  },
+  result: {}
+}
+```
+
+Middlewares can do whatever they want with this data.
+
+However the computed result should be written into the `result` object since this is returned by the Local Emulators `runMiddlewares` function after all middlewares are executed.
 
 Middlewares can be implemented against different lifecycle events. Right now the lifecycle events are:
 
-| Lifecycle | Description |
-| --- | --- |
-| `preInvoke` | Right after, but before the function which invokes the specific function is executed |
-| `postInvoke` | After the function is invoked, but before it's result is passed back via the API |
+| Lifecycle | Description | Available data | Expected result object |
+| --- | --- | --- | --- |
+| `preLoad` | Before the function is loaded and the execution environment is configured | `{ payload: { serviceName: <string>, functionName <string>, functionConfig: <object> }, result: {} }` | `{ functionName: <string>, functionFileName: <string> }` |
+| `postLoad` | After the function was loaded and the execution environment was configured | `TBD` | `TBD` |
+| `preInvoke` | Right before the payload is passed to the function which should be invoked | `{ payload: { serviceName: <string>, functionName: <string>, functionConfig: <object>, payload: <object> }, result: {} }` | `{ <provider-specific-handler-params> }` **Note:** Those params should exclude the `callback` parameter since this is provided by the runtime. |
+| `postInvoke` | After the function is invoked, but before it's result is passed back via the API | `TBD` | `TBD` |
 
-The Local Emulator uses own `core-middlewares` to e.g. modify the data and prepare it so that it can be passed in the provider specific handler format.
-
-Here's an example of a `my-middleware.js` file which shows how middlewares are implemented:
-
-```javascript
-const preInvoke = data => Promise.resolve(data);
-const postInvoke = data => Promise.resolve(data);
-
-module.exports = { preInvoke, postInvoke };
-```
+Take a look at our [`core-middlewares`](./src/core-middlewares) to see some example implementations.
 
 Middlewares are loaded and executed in the following order:
 
