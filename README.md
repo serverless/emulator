@@ -176,7 +176,9 @@ Right now the local emulator only exposes a HTTP API. However other API types su
 
 The local emulator exposes a HTTP API which makes it possible for other services to interact with it via HTTP calls.
 
-#### Deploy function
+#### Functions
+
+##### Deploy function
 
 `POST /v0/emulator/api/functions`
 
@@ -194,7 +196,7 @@ Response:
 - `functionConfig` - `object` - Additional (provider dependent) function configuration
 - `zipFilePath` - `string` - The path to the local zip file
 
-#### Invoke function
+##### Invoke function
 
 `POST /v0/emulator/api/functions/invoke`
 
@@ -209,3 +211,16 @@ Response:
 - `functionName` - `string` - The name of the function
 - `serviceName` - `string` - The service the function belongs to
 - `payload` - `object` - The event payload the function should receive
+
+#### Utils
+
+`POST /v0/emulator/api/utils/heartbeat`
+
+Request:
+
+- `ping` - `string` - **required** The string the Local Emulator should return
+
+Response:
+
+- `pong` - `string` - The string the Local Emulator should return
+- `timestamp` - `integer` - Timestamp which indicates when the response was computed

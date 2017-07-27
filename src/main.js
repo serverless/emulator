@@ -23,13 +23,6 @@ async function run() {
   const options = R.omit(['_'], argv);
   const port = options.port || 8080;
 
-  const ping = async (ctx) => {
-    ctx.response.type = 'json';
-    ctx.body = {
-      id: 'serverless-local-emulator',
-    };
-  };
-
   const functions = {
     deploy: async (ctx) => {
       const requestBody = ctx.request.body;
@@ -68,7 +61,20 @@ async function run() {
     },
   };
 
-  app.use(router.get('/ping', ping));
+  const utils = {
+    heartbeat: async (ctx) => {
+      const ping = ctx.request.body.ping;
+      const timestamp = (+new Date());
+
+      ctx.response.type = 'json';
+      ctx.body = {
+        pong: ping,
+        timestamp,
+      };
+    },
+  };
+
+  app.use(router.post('/v0/emulator/api/utils/heartbeat', utils.heartbeat));
   app.use(router.post('/v0/emulator/api/functions', functions.deploy));
   app.use(router.post('/v0/emulator/api/functions/invoke', functions.invoke));
 
