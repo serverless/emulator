@@ -7,6 +7,8 @@ import minimist from 'minimist';
 import R from 'ramda';
 import validateServiceName from './utils/validateServiceName';
 import validateFunctionName from './utils/validateFunctionName';
+import validateZipFilePath from './utils/validateZipFilePath';
+import unzipFunctionCode from './utils/unzipFunctionCode';
 import writeFunctionConfigFile from './utils/writeFunctionConfigFile';
 import readFunctionConfigFile from './utils/readFunctionConfigFile';
 import setupExecutionEnvironment from './utils/setupExecutionEnvironment';
@@ -30,13 +32,13 @@ async function run() {
 
   const functions = {
     deploy: async (ctx) => {
-      const functionObj = ctx.request.body;
-      const serviceName = validateServiceName(functionObj.serviceName);
-      const functionName = validateFunctionName(functionObj.functionName);
-      const functionConfig = functionObj.config;
+      const requestBody = ctx.request.body;
+      const serviceName = validateServiceName(requestBody.serviceName);
+      const functionName = validateFunctionName(requestBody.functionName);
+      const zipFilePath = validateZipFilePath(requestBody.zipFilePath);
+      const functionConfig = requestBody.functionConfig;
 
-      console.log(`Received ${functionName} Function`);
-
+      await unzipFunctionCode(zipFilePath, serviceName, functionName);
       await writeFunctionConfigFile(functionConfig, serviceName, functionName);
 
       ctx.response.type = 'json';

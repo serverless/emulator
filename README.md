@@ -184,18 +184,15 @@ Request:
 
 - `functionName` - `string` - **required** The name of the function
 - `serviceName` - `string` - **required** The service the function belongs to
-- `config` - `object`: - **required** Additional function configuration
-  + `handler` - `string` - **required** The exported function which should be used
-  + `lambdaName` - `string` - **required** The lambda name.
-  + `memorySize` - `string` - **required** The lambda memory size.
-  + `region` - `string` - **required** The emulated AWS region the lambda is running on.
-- `data` - `buffer` - **required** The zip file data which contains the functions code
+- `functionConfig` - `object`: - **required** Additional (provider dependent) function configuration
+- `zipFilePath` - `string` - **required** The path to the local zip file
 
 Response:
 
 - `functionName` - `string` - The name of the function
 - `serviceName` - `string` - The service the function belongs to
-- `config` - `object` - Additional function configuration
+- `functionConfig` - `object` - Additional (provider dependent) function configuration
+- `zipFilePath` - `string` - The path to the local zip file
 
 #### Invoke function
 

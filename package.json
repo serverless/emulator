@@ -15,6 +15,7 @@
   "dependencies": {
     "babel-polyfill": "^6.23.0",
     "bluebird": "^3.5.0",
+    "decompress": "^4.2.0",
     "fs-extra": "^0.26.7",
     "js-yaml": "^3.6.1",
     "koa": "^2.3.0",
