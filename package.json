@@ -7,7 +7,7 @@
     "lint": "eslint . --cache",
     "test": "jest",
     "watch": "rm -rf dist && mkdir -p dist && babel -w src -d dist --source-maps",
-    "start": "node dist/index.js"
+    "start": "nodemon dist/index.js"
   },
   "bin": {
     "sle": "./bin/emulator"
@@ -33,6 +33,7 @@
     "eslint": "^4.3.0",
     "eslint-config-airbnb-base": "^11.3.0",
     "eslint-plugin-import": "^2.7.0",
-    "jest": "^20.0.4"
+    "jest": "^20.0.4",
+    "nodemon": "^1.11.0"
   }
 }
