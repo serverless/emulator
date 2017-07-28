@@ -1,4 +1,5 @@
 // this is an example / scaffold to show how the middlewares concept works
+
 import R from 'ramda';
 
 const preLoad = (data) => {
