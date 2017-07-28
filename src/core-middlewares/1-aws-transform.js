@@ -68,6 +68,19 @@ const preInvoke = (data) => {
 
 const postInvoke = (data) => {
   const transformedData = R.clone(data);
+  const { payload } = transformedData;
+
+  if (payload.functionConfig.provider && payload.functionConfig.provider === 'aws') {
+    if (transformedData.payload.errorData) {
+      // TODO implement AWS Lambda error logic here
+      transformedData.result.errorData = {
+        type: 'AWS Error',
+        message: transformedData.payload.errorData,
+      };
+    }
+  }
+
+  transformedData.result.outputData = transformedData.payload.outputData;
   return Promise.resolve(transformedData);
 };
 

@@ -155,7 +155,7 @@ Middlewares can be implemented against different lifecycle events. Right now the
 | `preLoad` | Before the function is loaded and the execution environment is configured | `{ payload: { serviceName: <string>, functionName <string>, functionConfig: <object> }, result: {} }` | `{ functionName: <string>, functionFileName: <string>, env: <object> }` |
 | `postLoad` | After the function was loaded and the execution environment was configured | `TBD` | `TBD` |
 | `preInvoke` | Right before the payload is passed to the function which should be invoked | `{ payload: { serviceName: <string>, functionName: <string>, functionConfig: <object>, payload: <object> }, result: {} }` | `{ <provider-specific-handler-params> }` **Note:** Those params should exclude the `callback` parameter since this is provided by the runtime. |
-| `postInvoke` | After the function is invoked, but before it's result is passed back via the API | `TBD` | `TBD` |
+| `postInvoke` | After the function is invoked, but before it's result is passed back via the API | `{ payload: { serviceName: <string>, functionName: <string>, functionConfig: <object>, payload: <object>, errorData: <string>, outputData: <string> }, result: {} }` | `{ errorData: <object>, outputData: <object> }` |
 
 Take a look at our [`core-middlewares`](./src/core-middlewares) to see some example implementations.
 
