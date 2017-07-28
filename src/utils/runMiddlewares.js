@@ -3,7 +3,7 @@ import R from 'ramda';
 import loadCoreMiddlewares from './loadCoreMiddlewares';
 
 async function runMiddlewares(hook, data, middlewaresArr) {
-  const middlewares = loadCoreMiddlewares();
+  const middlewares = await loadCoreMiddlewares();
 
   let middlewaresToRun;
   if (!middlewaresArr || middlewaresArr.length === 0) {
