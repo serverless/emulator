@@ -54,10 +54,10 @@ async function run() {
     },
 
     invoke: async (ctx) => {
-      const functionObj = ctx.request.body;
-      const serviceName = validateServiceName(functionObj.serviceName);
-      const functionName = validateFunctionName(functionObj.functionName);
-      const payload = functionObj.payload;
+      const requestBody = ctx.request.body;
+      const serviceName = validateServiceName(requestBody.serviceName);
+      const functionName = validateFunctionName(requestBody.functionName);
+      const payload = requestBody.payload;
 
       const functionConfig = await readFunctionConfigFile(serviceName, functionName);
       const spawnedProc = await setupExecutionEnvironment(serviceName, functionName, functionConfig);
@@ -85,9 +85,9 @@ async function run() {
     },
   };
 
-  app.use(router.post('/v0/emulator/api/utils/heartbeat', utils.heartbeat));
   app.use(router.post('/v0/emulator/api/functions', functions.deploy));
   app.use(router.post('/v0/emulator/api/functions/invoke', functions.invoke));
+  app.use(router.post('/v0/emulator/api/utils/heartbeat', utils.heartbeat));
 
   app.listen(port, () => {
     // eslint-disable-next-line
