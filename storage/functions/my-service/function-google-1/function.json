@@ -1,0 +1,12 @@
+{
+  "handler": "index/helloWorld",
+  "provider": "google",
+  "runtime": "nodejs",
+  "env": {
+    "REGION": "us-central1",
+    "FUNCTION_NAME": "function-google-1",
+    "MEMORY_SIZE": 1024,
+    "EXAMPLE_KEY_1": "Example Value 1",
+    "EXAMPLE_KEY_2": "Example Value 2"
+  }
+}
