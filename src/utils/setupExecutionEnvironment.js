@@ -37,7 +37,7 @@ async function setupExecutionEnvironment(serviceName, functionName, functionConf
     },
   );
 
-  // TODO postLoadResult = await runMiddlewares('postLoad', postLoadPayload);
+  // TODO const postLoadResult = await runMiddlewares('postLoad', postLoadPayload);
 
   return {
     stdin: childProc.stdin,
