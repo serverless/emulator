@@ -5,5 +5,6 @@ module.exports.helloWorld = (event, context, callback) => {
     message: 'Hello World!',
     event,
     context,
+    env: process.env,
   });
 };

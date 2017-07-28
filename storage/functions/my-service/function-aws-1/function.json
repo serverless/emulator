@@ -1,5 +1,13 @@
 {
   "handler": "hello-world/helloWorld",
   "provider": "aws",
-  "runtime": "nodejs6.10"
+  "runtime": "nodejs6.10",
+  "env": {
+    "REGION": "us-east-1",
+    "LOG_GROUP_NAME": "helloWorld-LogGroup",
+    "FUNCTION_NAME": "function-aws-1",
+    "MEMORY_SIZE": 512,
+    "EXAMPLE_KEY_1": "Example Value 1",
+    "EXAMPLE_KEY_2": "Example Value 2"
+  }
 }
