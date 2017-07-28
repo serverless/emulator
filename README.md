@@ -161,8 +161,10 @@ Take a look at our [`core-middlewares`](./src/core-middlewares) to see some exam
 
 Middlewares are loaded and executed in the following order:
 
-1. Load / Execute the core middlewares (according to the `core-middlewares` directory)
-1. Load / Execute the custom user defined middlewares
+1. Load the [`core-middlewares`](./src/core-middlewares) in an alphabetical order
+1. Execute the core middlewares in the previously loaded order
+1. Load the custom middlewares in the order provided in the config file
+1. Execute the custom middlewares in the previously loaded order
 
 ## APIs
 
