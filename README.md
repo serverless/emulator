@@ -6,13 +6,17 @@
 - [Development](#development)
 - [Functionality](#functionality)
   + [General](#general)
-    + [Deployment](#deployment)
-    + [Invocation](#invocation)
-    + [Middlewares](#middlewares)
+  + [Function deployment](#function-deployment)
+    + [Function config / `function.json`](#function-config--functionjson)
+  + [Function invocation](#function-invocation)
+  + [Middlewares](#middlewares)
 - [APIs](#apis)
   + [HTTP API](#http-api)
-    + [Deploy function](#deploy-function)
-    + [Invoke function](#invoke-function)
+    + [Functions](#functions)
+      + [Deploy function](#deploy-function)
+      + [Invoke function](#invoke-function)
+    + [Utils](#utils)
+      + [Heartbeat](#heartbeat)
 
 ---
 
@@ -20,13 +24,13 @@
 
 1. Clone the repository
 1. Run `npm install` to install all dependencies
-1. Run `scripts/sync-storage` to sync the example artifacts with the Local Emulators `storage` location
+1. Run `scripts/sync-storage` to sync the [example `storage` artifacts](./storage) with the Local Emulators `storage` location
 1. Run `npm build` to build the project (the build artifacts can be found in `dist`)
 1. Run `npm start` to start the emulator
 
 ## Development
 
-You can run `npm watch` to automatically re-build the files in the `src` directory when they change.
+You can run `npm run watch` to automatically re-build the files in the `src` directory when they change.
 
 Additionally you can use Docker to run and develop everything inside a container.
 
@@ -34,7 +38,7 @@ Spinning up the Docker container is as easy as `docker-compose run -p 8080:8080 
 
 ## Using the Local Emulator
 
-The following documents provide some insights on how configure and use the Local Emulator.
+The following documents provide some insights on how to configure and use the Local Emulator.
 
 ### Options
 
@@ -53,22 +57,19 @@ The Local Emulator can be configured with the following options you can pass in 
 
 ### General
 
-The Local Emulator is a software which makes it possible to emulate cloud provider specific functionality on your local machine in an offline-first fashion.
+The Local Emulator is a software which makes it possible to emulate different cloud provider FaaS offerings (such as AWS Lambda or Google Cloud Functions) on your local machine in an offline-focused manner.
 
-The Local Emulator can be used to deploy and invoke serverless functions w/o the need to go through the tedious process of setting up your cloud provider account or deploying your functions to the cloud infrastructure.
+It can be used to deploy and invoke serverless functions w/o the need to go through the process of setting up and configuring a cloud provider account or deploying the functions into the infrastructure before being able to use them.
 
-This enables new ways of doing serverless development offline first while introducing way faster feedback cycles.
+This enables new ways of doing offline-first serverless development with a way faster feedback loop.
 
-Technically speaking the Local Emulator is a long running process (Daemon) which exposes an API and accepts different calls to the different API endpoints in order to perform actions and control its behavior / functionality.
+Technically speaking the Local Emulator is a long running process (Daemon) which exposes an API and accepts different calls to API endpoints in order to perform actions and control its behavior.
 
-**Note:** The API is only used to control the Local Emulator. It is **NOT** the same as an e.g. AWS API Gateway or smth. similar.
+**Note:** The API is only used to control the Local Emulator. It is **NOT** the same as an API Gateway.
 
-### Deployment
+### Function deployment
 
-On every function deployment the following happens behind the scenes:
-
-- The .zip file will be extracted
-- The content of the zip file will be moved into the following directory structure:
+Functions are deployed via the [API](#apis) and are stored in the `~/.serverless/local-emulator` directory according to the following filesystem structure:
 
 ```
 |__ storage
@@ -83,36 +84,55 @@ The root directory is the `storage` directory. It's a place where all artifacts 
 
 The `functions` directory is the place where all the function-related artifacts are stored.
 
-A directory for the specific service is created and contains dedicated directories for each function.
+A directory for the specific service contains directories for each individual function.
 
-The `code` directory is the place where the actual function code is stored (the unzipped content of the submitted `.zip` file).
+The `code` directory is the place where the actual (unzipped) function code is stored.
 
-The `function.json` file is created on the fly and contains important information about the function configuration (e.g. where the handler can be found) and its metadata.
+The `function.json` file contains important information about the function configuration (e.g. what `runtime` this function uses or which `provider` it's written for) and other metadata.
 
 The proposed directory structure makes it easy for the Local Emulator to follow a convention-over-configuration approach where artifacts are stored in a predictable way without having to introduce a local DB with state information about all the deployed functions and services.
 
-(*However we might introduce such a feature later on when we decide to e.g. display some information about the state of the Local Emulator at `GET /`*).
+On every function deployment the following happens behind the scenes:
 
-### Invocation
+- For every `service` and `function` a separate directory will be created (if not already present)
+- The `.zip` file will be extracted and moved into the `code` directory
+- The `function` configuration which is passed in via the API will be written into the `function.json` file
 
-When invoking a function the Local Emulator will simply look for the function directory (see above how the naming schema helps with the lookup), determines the runtime based on the file extension of the function handler which is found in `function.json` and starts the execution phase which will happen in a dedicated child process (more on that later).
+#### Function config / `function.json`
 
-The invocation data is extracted from the incoming requested and passed to a so-called `wrapper` script via `stdin`. The wrapper script is an implementation of language specific logic and functionality and is written in the target runtime language. It's responsible to setup the execution environment, require the function and pass the event payload to the function (you can think of it as a language specific container). Furthermore it will marshall the returned data and pass it back to the Local Emulators parent process which will then transform it into a JSON format and sends it back via a HTTP response.
+Every function needs information about its configuration. This information is passed in via the API when the function is deployed.
+
+Upon deployment this data is persisted in the `function.json` file.
+
+The `function.json` files can be found in `~/.serverless/local-emulator/storage/functions/<service-name>/<function-name>`.
+
+The Local Emulator needs those file to e.g. make decision which [middlewares](#middlewares) to execute or which runtime-specific wrapper to use.
+
+Here's a list with different example functions and their corresponding provider-related `function.json` config files:
+
+- [Example AWS function](./storage/functions/my-service/function-aws-1)
+- [Example Google function](./storage/functions/my-service/function-google-1)
+
+### Function invocation
+
+When invoking a function the Local Emulator will simply look for the function directory (see above how the naming schema helps with the lookup), determines the `provider`, `runtime` and `handler` based on the config in the `function.json` file and starts the execution phase which will happen in a dedicated child process (more on that later).
+
+The invocation data is extracted from the incoming API requested and passed to a so-called runtime-specific "wrapper script" via `stdin`. This "wrapper script" is responsible to setup the execution environment, require the function and pass the event payload to the function (you can think of it as a language specific container). Furthermore it will marshall the returned data and pass it back to the Local Emulators parent process which will then transform it into a JSON format and sends it back via an API response.
 
 The whole invocation happens in a `child_process.spawn()` call to ensure that the Local Emulator won't crash when a function misbehaves.
 
-This abstraction layer makes it easy to introduce other runtimes later on. Furthermore the way the event data is handled by the Local Emulator is always the same and independent of the function handler signature since the wrapper encapsulates the logic to marshall and unmarshall the data which is handed over to the function.
+This abstraction layer makes it easy to introduce other runtimes later on. Furthermore the way the incoming event data is handled by the Local Emulator is always the same and independent of the function handler signature since the wrapper encapsulates the logic to marshall and unmarshall the data which is handed over to the function.
 
-Here's a sample call to a wrapper script which is written in Node.js. It will require the function and pass the JSON data as event data to the required function.
+Here's a sample call to invoke an AWS function within the wrapper script (which is written in Node.js). It will require and prepare the function (according to the CLI `options`) and pass the echoed data as the function parameters (via `stdin`) to it:
 
 ```bash
-echo '{ "service": "my-service", "function": "my-function", "payload": { "event": {}, "context": {}, "callback": () => {} } }' | node node.js
+echo '{ "event": { "foo": "bar" }, "context": {} }' | runtimes/node.js --functionFilePath ~/.serverless/local-emulator/storage/functions/my-service/function-1/code/hello-world.js --functionName helloWorld
 ```
 
 Here's another example which does essentially the same for a Python environment:
 
 ```bash
-echo '{ "service": "my-service", "function": "my-function", "payload": { "event": {}, "context": {}, "callback": () => {} } }' | python python.py
+echo '{ "event": { "foo": "bar" }, "context": {} }' | runtimes/python.py --functionFilePath ~/.serverless/local-emulator/storage/functions/my-service/function-1/code/hello-world.py --functionName helloWorld
 ```
 
 ### Middlewares
@@ -168,15 +188,15 @@ Middlewares are loaded and executed in the following order:
 
 ## APIs
 
-The local emulator exposes different APIs which makes it possible to interact with it and perform specific actions.
+The Local Emulator exposes different APIs which makes it possible to interact with it and perform specific actions.
 
 Examples for such actions could e.g. be the deployment or invocation of functions.
 
-Right now the local emulator only exposes a HTTP API. However other API types such as (g)RPC are imaginable.
+Right now only an HTTP API is implemented. However other API types such as (g)RPC are imaginable.
 
 ### HTTP API
 
-The local emulator exposes a HTTP API which makes it possible for other services to interact with it via HTTP calls.
+The Local Emulator exposes a HTTP API which makes it possible for other services to interact with it via HTTP calls.
 
 #### Functions
 
@@ -215,6 +235,8 @@ Response:
 - `payload` - `object` - The event payload the function should receive
 
 #### Utils
+
+##### Heartbeat
 
 `POST /v0/emulator/api/utils/heartbeat`
 
