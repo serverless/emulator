@@ -1,7 +1,7 @@
 {
-  "name": "serverless-local-emulator",
+  "name": "@serverless/emulator",
   "version": "0.1.0",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "scripts": {
     "build": "rm -rf dist && mkdir -p dist && babel src -d dist --source-maps",
     "lint": "eslint . --cache",
@@ -36,5 +36,8 @@
     "eslint-plugin-import": "^2.7.0",
     "jest": "^20.0.4",
     "nodemon": "^1.11.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
