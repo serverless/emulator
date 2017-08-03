@@ -1,0 +1,15 @@
+language: node_js
+sudo: false
+node_js:
+- 8
+script:
+- npm test
+- npm run lint
+deploy:
+  provider: npm
+  email: services@serverless.com
+  skip_cleanup: true
+  on:
+    tags: true
+  api_key:
+    secure: Kf2lN1Yywinl8JB4WXDYJbSkAmK4/vITtLVQjhemK+0pqGIjAqq2PGk6IG9peYY8dita39DX9WUmP9v3sHYxulzKtbB+wOfOcSwvPQuYXmx2xgFmVrRqqts27eZlDpjBD1UiCQ4PV9JxYPiYGwIK8qyNcbn5/s2q8m72ac7oUcmmmWbaMHndSIQ0LkpSYA7DbDjmWdd7EDDGCaX7nKeR0jY2E/lnTnXaZx6tlX4UlB09PmpNxwPRLaH4ScA8MO0l+dIGo4Q7zmABvIOTfl5l4XgfAUIu8s7zVHJ04YUThj7vONmEl+N8y+kpllvHkMu52iyh8Yu7bbTAhqkevNbUzPMo5gBqoLPmSw1JC4blJSlq3TXYhOpu0zNyvIalkB0KbtNsjcMjEusdJEvpKrqeWuU8hF+jJCudDhUJLrTjKC+rE+FyR6vvsBQ4RlUCE7TwcBVUUSN5ZkyPXvsuqF/0evYMmLZ1oebcHzxaJWE2EQ0ef3UsynwJtVlRt4/qmJBMYWN0WnJEifQbyla9jXSVcVfJpZ6QTBkF8AVhpfdDkiSQv/RAMvuDr/Qd70cw8KSlnDGcKBSw2HT6yXA/s5gIkMYh/c4I5YS7WP90mvjfhg5tGHxTrPz5zqKe0wSLmdPT2YG/n5Iq0fBufaWq3uzJe1Apjzh4oBXK/LFzvfFX0OQ=
