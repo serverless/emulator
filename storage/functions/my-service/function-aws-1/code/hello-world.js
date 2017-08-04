@@ -1,10 +1,6 @@
-'use strict';
-
-module.exports.helloWorld = (event, context, callback) => {
-  return callback(null, {
-    message: 'Hello World!',
-    event,
-    context,
-    env: process.env,
-  });
-};
+module.exports.helloWorld = (event, context, callback) => callback(null, {
+  message: 'Hello World!',
+  event,
+  context,
+  env: process.env,
+});
