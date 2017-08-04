@@ -34,7 +34,7 @@ You can run `npm run watch` to automatically re-build the files in the `src` dir
 
 Additionally you can use Docker to run and develop everything inside a container.
 
-Spinning up the Docker container is as easy as `docker-compose run -p 8080:8080 node bash`.
+Spinning up the Docker container is as easy as `docker-compose run -p 4002:4002 node bash`.
 
 ## Using the Local Emulator
 
@@ -44,7 +44,7 @@ The following documents provide some insights on how to configure and use the Lo
 
 The Local Emulator can be configured with the following options you can pass in via the CLI:
 
-- `--port` - `number` - Optional port (defaults to `8080`)
+- `--port` - `number` - Optional port (defaults to `4002`)
 
 ### Starting the Local Emulator
 
