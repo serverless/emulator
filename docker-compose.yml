@@ -4,6 +4,7 @@ services:
   node:
     image: node:latest
     working_dir: /app
+    command: npm install
     volumes:
       - .:/app
     expose:
