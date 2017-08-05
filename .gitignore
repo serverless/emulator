@@ -4,3 +4,5 @@ dist
 
 storage/functions/**
 !storage/functions/my-service
+
+.eslintcache
