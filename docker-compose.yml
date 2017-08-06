@@ -8,6 +8,6 @@ services:
     volumes:
       - .:/app
     expose:
-      - '8080'
+      - '4002'
     ports:
-      - '8080:8080'
+      - '4002:4002'
