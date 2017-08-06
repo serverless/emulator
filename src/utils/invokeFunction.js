@@ -1,6 +1,7 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable max-len */
 
+import stringify from 'node-stringify';
 import BbPromise from 'bluebird';
 import runMiddlewares from './runMiddlewares';
 
@@ -10,11 +11,12 @@ async function invokeFunction(serviceName, functionName, functionConfig, proc, p
   const preInvokePayload = { serviceName, functionName, functionConfig, payload };
   const preInvokeResult = await runMiddlewares('preInvoke', preInvokePayload);
 
-  const serializedPayload = JSON.stringify(preInvokeResult);
+  // use stringify module here to preserve the callback function
+  const stdinPayload = String(stringify(preInvokeResult));
 
   // send payload to runtime
   stdin.setEncoding('utf-8');
-  stdin.write(serializedPayload);
+  stdin.write(stdinPayload);
   stdin.end();
 
   const errorData = await getErrorData(stderr);
@@ -24,10 +26,22 @@ async function invokeFunction(serviceName, functionName, functionConfig, proc, p
   const postInvokeResult = await runMiddlewares('postInvoke', postInvokePayload);
 
   if (errorData) {
-    return postInvokeResult.errorData;
+    let error;
+    try {
+      error = JSON.parse(postInvokeResult.errorData);
+    } catch (e) {
+      error = postInvokeResult.errorData;
+    }
+    return error;
   }
 
-  return JSON.parse(postInvokeResult.outputData);
+  let result;
+  try {
+    result = JSON.parse(postInvokeResult.outputData);
+  } catch (e) {
+    result = postInvokeResult.outputData;
+  }
+  return result;
 }
 
 // helper functions

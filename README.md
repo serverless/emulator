@@ -126,13 +126,7 @@ This abstraction layer makes it easy to introduce other runtimes later on. Furth
 Here's a sample call to invoke an AWS function within the wrapper script (which is written in Node.js). It will require and prepare the function (according to the CLI `options`) and pass the echoed data as the function parameters (via `stdin`) to it:
 
 ```bash
-echo '{ "event": { "foo": "bar" }, "context": {} }' | runtimes/node.js --functionFilePath ~/.serverless/local-emulator/storage/functions/my-service/function-1/code/hello-world.js --functionName helloWorld
-```
-
-Here's another example which does essentially the same for a Python environment:
-
-```bash
-echo '{ "event": { "foo": "bar" }, "context": {} }' | runtimes/python.py --functionFilePath ~/.serverless/local-emulator/storage/functions/my-service/function-1/code/hello-world.py --functionName helloWorld
+echo '{ event: { foo: "bar" }, context: {}, callback: (error, result) => {} }' | runtimes/node.js --functionFilePath ~/.serverless/local-emulator/storage/functions/my-service/function-1/code/hello-world.js --functionName helloWorld
 ```
 
 ### Middlewares
@@ -174,7 +168,7 @@ Middlewares can be implemented against different lifecycle events. Right now the
 | --- | --- | --- | --- |
 | `preLoad` | Before the function is loaded and the execution environment is configured | `{ payload: { serviceName: <string>, functionName <string>, functionConfig: <object> }, result: {} }` | `{ functionName: <string>, functionFileName: <string>, env: <object> }` |
 | `postLoad` | After the function was loaded and the execution environment was configured | `TBD` | `TBD` |
-| `preInvoke` | Right before the payload is passed to the function which should be invoked | `{ payload: { serviceName: <string>, functionName: <string>, functionConfig: <object>, payload: <object> }, result: {} }` | `{ <provider-specific-handler-params> }` **Note:** Those params should exclude the `callback` parameter since this is provided by the runtime. |
+| `preInvoke` | Right before the payload is passed to the function which should be invoked | `{ payload: { serviceName: <string>, functionName: <string>, functionConfig: <object>, payload: <object> }, result: {} }` | `{ <provider-specific-handler-params> }` **Note:** Those params should include the `callback` parameter! |
 | `postInvoke` | After the function is invoked, but before it's result is passed back via the API | `{ payload: { serviceName: <string>, functionName: <string>, functionConfig: <object>, payload: <object>, errorData: <string>, outputData: <string> }, result: {} }` | `{ errorData: <object>, outputData: <object> }` |
 
 Take a look at our [`core-middlewares`](./src/core-middlewares) to see some example implementations.

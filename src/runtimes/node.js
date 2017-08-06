@@ -10,15 +10,14 @@ process.stdin.on('data', chunk => chunks.push(chunk));
 
 process.stdin.on('end', () => {
   const res = Buffer.concat(chunks).toString();
-  const params = JSON.parse(res);
+  // NOTE using eval here do deserialize the stdin payload
+  // which also includes the callback function!
+  // eslint-disable-next-line
+  const funcParams = eval(res);
 
   const functionFilePath = options.functionFilePath;
   const functionName = options.functionName;
   const func = require(functionFilePath)[functionName]; // eslint-disable-line
 
-  func(...Object.values(params), (error, result) => {
-    if (error) throw new Error(error);
-    const serializedResult = JSON.stringify(result);
-    console.log(serializedResult); // eslint-disable-line
-  });
+  func(...Object.values(funcParams));
 });
