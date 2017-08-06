@@ -7,7 +7,7 @@
     "lint": "eslint . --cache",
     "test": "jest",
     "watch": "rm -rf dist && mkdir -p dist && babel -w src -d dist --source-maps",
-    "start": "nodemon dist/index.js"
+    "start": "npm run build && nodemon dist/index.js"
   },
   "bin": {
     "sle": "./bin/emulator"
