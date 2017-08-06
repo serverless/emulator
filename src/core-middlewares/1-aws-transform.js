@@ -1,6 +1,8 @@
 // functions to get the data into the necessary shape so that the Local Emulator
 // can work with AWS services (e.g. Lambda functions)
 
+/* eslint-disable no-use-before-define */
+
 import R from 'ramda';
 import getRuntimeFileExtension from '../utils/getRuntimeFileExtension';
 import getRuntimeExecName from '../utils/getRuntimeExecName';
@@ -9,7 +11,7 @@ const preLoad = (data) => {
   const transformedData = R.clone(data);
   const { payload } = transformedData;
 
-  if (payload.functionConfig.provider && payload.functionConfig.provider === 'aws') {
+  if (isProviderAws(payload)) {
     const runtimeExec = getRuntimeExecName(payload.functionConfig.runtime);
 
     // construct the functionName and functionFileName
@@ -54,10 +56,14 @@ const preInvoke = (data) => {
   const transformedData = R.clone(data);
   const { payload } = transformedData;
 
-  if (payload.functionConfig.provider && payload.functionConfig.provider === 'aws') {
+  if (isProviderAws(payload)) {
     const functionParams = {
       event: payload.payload,
       context: {},
+      callback: (error, result) => {
+        if (error) throw new Error(error);
+        console.log(JSON.stringify(result)); // eslint-disable-line
+      },
     };
 
     transformedData.result = functionParams;
@@ -84,5 +90,9 @@ const postInvoke = (data) => {
   return Promise.resolve(transformedData);
 };
 
+// helper functions
+function isProviderAws(payload) {
+  return payload.functionConfig.provider && payload.functionConfig.provider === 'aws';
+}
 
 export { preLoad, postLoad, preInvoke, postInvoke };
