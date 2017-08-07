@@ -34,7 +34,7 @@ You can run `npm run watch` to automatically re-build the files in the `src` dir
 
 Additionally you can use Docker to run and develop everything inside a container.
 
-Spinning up the Docker container is as easy as `docker-compose run -p 4002:4002 node bash`. Make sure to run the steps in Getting Started.
+Spinning up the Docker container is as easy as `docker-compose run -p 4002:4002 node bash`. Make sure to run the steps in [Getting started](#getting-started).
 
 Or, if you need a build a Docker image and run it, do:
 
