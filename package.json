@@ -1,6 +1,6 @@
 {
   "name": "@serverless/emulator",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "license": "Apache-2.0",
   "scripts": {
     "build": "rm -rf dist && mkdir -p dist && babel src -d dist --source-maps",
