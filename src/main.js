@@ -10,7 +10,7 @@ import validateFunctionName from './utils/validateFunctionName';
 // import validateZipFilePath from './utils/validateZipFilePath';
 // import unzipFunctionCode from './utils/unzipFunctionCode';
 import copyDirContentsSync from './utils/fs/copyDirContentsSync';
-import getFunctionDirectoryPath from './utils/getFunctionDirectoryPath';
+import getFunctionCodeDirectoryPath from './utils/getFunctionCodeDirectoryPath';
 import writeFunctionConfigFile from './utils/writeFunctionConfigFile';
 import readFunctionConfigFile from './utils/readFunctionConfigFile';
 import setupExecutionEnvironment from './utils/setupExecutionEnvironment';
@@ -44,9 +44,9 @@ async function run() {
       // const zipFilePath = validateZipFilePath(requestBody.zipFilePath);
       const functionConfig = requestBody;
 
-      const functionDirectoryPath = getFunctionDirectoryPath(service, fn);
+      const functionCodeDirectoryPath = getFunctionCodeDirectoryPath(service, fn);
 
-      copyDirContentsSync(functionConfig.servicePath, functionDirectoryPath);
+      copyDirContentsSync(functionConfig.servicePath, functionCodeDirectoryPath);
       // await unzipFunctionCode(zipFilePath, serviceName, functionName);
       await writeFunctionConfigFile(functionConfig, serviceName, functionName);
 

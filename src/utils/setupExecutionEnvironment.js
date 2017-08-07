@@ -32,9 +32,6 @@ async function setupExecutionEnvironment(serviceName, functionName, functionConf
       '--functionFilePath', path.join(pathToFunctionCode, preLoadResult.functionFileName),
       '--functionName', preLoadResult.functionName,
     ],
-    {
-      env,
-    },
   );
 
   // TODO const postLoadResult = await runMiddlewares('postLoad', postLoadPayload);
