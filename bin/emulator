@@ -1,3 +1,7 @@
 #!/usr/bin/env node
 
-require('../dist/index');
+if (process.argv[2] === 'ping') {
+  console.log('pong');
+} else {
+  require('../dist/index');
+}
