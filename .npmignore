@@ -1,0 +1,7 @@
+node_modules
+.idea/
+
+storage/functions/**
+!storage/functions/my-service
+
+.eslintcache
