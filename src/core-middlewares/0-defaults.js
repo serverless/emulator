@@ -11,11 +11,9 @@ const preLoad = (data) => {
     const runtimeExec = getRuntimeExecName(payload.functionConfig.runtime);
 
     if (runtimeExec === 'node') {
-      const defaultEnvVars = {
-        // NOTE this env is necessary for the Node.js runtime!
-        // otherwise the child process fails!
-        PATH: '/usr/local/lib64/node-v6.10.x/bin:/usr/local/bin:/usr/bin/:/bin',
-      };
+      // NOTE this env is necessary for the Node.js runtime!
+      // otherwise the child process fails!
+      const defaultEnvVars = process.env;
       transformedData.result.env = R.merge(transformedData.result.env, defaultEnvVars);
     }
   }
