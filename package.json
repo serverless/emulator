@@ -1,6 +1,6 @@
 {
   "name": "@serverless/emulator",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "license": "Apache-2.0",
   "scripts": {
     "build": "rm -rf dist && mkdir -p dist && babel src -d dist --source-maps",
@@ -20,7 +20,7 @@
     "fs-extra": "^0.26.7",
     "js-yaml": "^3.6.1",
     "koa": "^2.3.0",
-    "koa-bodyparser": "^4.2.0",
+    "koa-bodyparser": "^2.5.0",
     "koa-route": "^3.2.0",
     "minimist": "^1.2.0",
     "node-stringify": "^0.2.0",

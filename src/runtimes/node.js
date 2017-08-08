@@ -2,6 +2,7 @@
 import minimist from 'minimist';
 import R from 'ramda';
 
+
 const argv = minimist(process.argv.slice(2));
 const options = R.omit(['_'], argv);
 
@@ -19,5 +20,5 @@ process.stdin.on('end', () => {
   const functionName = options.functionName;
   const func = require(functionFilePath)[functionName]; // eslint-disable-line
 
-  func(...Object.values(funcParams));
+  func(...R.values(funcParams));
 });

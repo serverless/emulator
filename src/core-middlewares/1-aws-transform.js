@@ -76,11 +76,11 @@ const preInvoke = (data) => {
       context: {
         awsRequestId: 'id',
         invokeid: 'id',
-        logGroupName: payload.functionConfig.env.LOG_GROUP_NAME,
+        logGroupName: `aws/lambda/${payload.functionConfig.lambdaName}`,
         logStreamName: '2015/09/22/[HEAD]13370a84ca4ed8b77c427af260',
         functionVersion: 'HEAD',
         isDefaultFunctionVersion: true,
-        functionName: payload.functionConfig.env.FUNCTION_NAME,
+        functionName: payload.functionConfig.lambdaName,
         memoryLimitInMB: '1024',
         succeed(result) {
           return this.callback(null, result);
