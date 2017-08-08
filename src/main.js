@@ -51,11 +51,7 @@ async function run() {
       await writeFunctionConfigFile(functionConfig, serviceName, functionName);
 
       ctx.response.type = 'json';
-      ctx.body = {
-        resource: 'functions',
-        method: 'deploy',
-        data: ctx.request.body,
-      };
+      ctx.body = ctx.request.body;
     },
 
     invoke: async (ctx, service, fn) => {
@@ -69,11 +65,7 @@ async function run() {
       const result = await invokeFunction(serviceName, functionName, functionConfig, spawnedProc, payload);
 
       ctx.response.type = 'json';
-      ctx.body = {
-        resource: 'functions',
-        method: 'invoke',
-        data: result,
-      };
+      ctx.body = result;
     },
   };
 

@@ -231,9 +231,7 @@ Request:
 
 Response:
 
-- `functionName` - `string` - The name of the function
-- `serviceName` - `string` - The service the function belongs to
-- `payload` - `object` - The event payload the function should receive
+- Result of the function invocation.
 
 #### Utils
 
