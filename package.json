@@ -2,6 +2,10 @@
   "name": "@serverless/emulator",
   "version": "0.1.7",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/serverless/emulator"
+  },
   "scripts": {
     "build": "rm -rf dist && mkdir -p dist && babel src -d dist --source-maps",
     "lint": "eslint . --cache",
