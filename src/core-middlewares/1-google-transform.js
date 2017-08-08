@@ -6,6 +6,7 @@
 import R from 'ramda';
 import getRuntimeFileExtension from '../utils/getRuntimeFileExtension';
 import getRuntimeExecName from '../utils/getRuntimeExecName';
+import { getPathToFunctionFile, getFunctionName } from '../utils/middlewareHelpers';
 
 const preLoad = (data) => {
   const transformedData = R.clone(data);
@@ -17,9 +18,9 @@ const preLoad = (data) => {
     // construct the functionName and functionFileName
     const fileExtension = getRuntimeFileExtension(payload.functionConfig.runtime);
     const handler = payload.functionConfig.handler;
-    const pathToFuncFile = handler.split('/').slice(0, -1);
+    const pathToFuncFile = getPathToFunctionFile(handler);
 
-    transformedData.result.functionName = handler.split('/').pop();
+    transformedData.result.functionName = getFunctionName(handler);
     transformedData.result.functionFileName = `${pathToFuncFile}${fileExtension}`;
 
     // for functions written in Node.js

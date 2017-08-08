@@ -1,5 +1,5 @@
 {
-  "handler": "hello-world/helloWorld",
+  "handler": "hello-world.helloWorld",
   "provider": "aws",
   "runtime": "nodejs6.10",
   "env": {
