@@ -26,9 +26,7 @@ const preLoad = (data) => {
     if (runtimeExec === 'node') {
       // set the provider related default environment variables
       const defaultEnvVars = {
-        PATH: '/usr/local/lib64/node-v4.3.x/bin:/usr/local/bin:/usr/bin/:/bin',
         LANG: 'en_US.UTF-8',
-        LD_LIBRARY_PATH: '/usr/local/lib64/node-v4.3.x/lib:/lib64:/usr/lib64:/var/runtime:/var/runtime/lib:/var/task:/var/task/lib', // eslint-disable-line max-len
         LAMBDA_TASK_ROOT: '/var/task',
         LAMBDA_RUNTIME_DIR: '/var/runtime',
         AWS_REGION: payload.functionConfig.region,
@@ -38,7 +36,6 @@ const preLoad = (data) => {
         AWS_LAMBDA_FUNCTION_NAME: payload.functionConfig.lambdaName,
         AWS_LAMBDA_FUNCTION_MEMORY_SIZE: payload.functionConfig.memorySize,
         AWS_LAMBDA_FUNCTION_VERSION: '$LATEST',
-        NODE_PATH: '/var/runtime:/var/task:/var/runtime/node_modules',
       };
       transformedData.result.env = R.merge(transformedData.result.env, defaultEnvVars);
     }
