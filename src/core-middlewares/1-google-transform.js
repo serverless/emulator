@@ -5,16 +5,13 @@
 
 import R from 'ramda';
 import getRuntimeFileExtension from '../utils/getRuntimeFileExtension';
-import getRuntimeExecName from '../utils/getRuntimeExecName';
-import { getPathToFunctionFile, getFunctionName } from '../utils/middlewareHelpers';
+import { getPathToFunctionFile, getFunctionName, isProvider, isRuntime } from '../utils/middlewareHelpers';
 
 const preLoad = (data) => {
   const transformedData = R.clone(data);
   const { payload } = transformedData;
 
-  if (isProviderGoogle(payload)) {
-    const runtimeExec = getRuntimeExecName(payload.functionConfig.runtime);
-
+  if (isProvider('google', payload)) {
     // construct the functionName and functionFileName
     const fileExtension = getRuntimeFileExtension(payload.functionConfig.runtime);
     const handler = payload.functionConfig.handler;
@@ -24,7 +21,7 @@ const preLoad = (data) => {
     transformedData.result.functionFileName = `${pathToFuncFile}${fileExtension}`;
 
     // for functions written in Node.js
-    if (runtimeExec === 'node') {
+    if (isRuntime('node', payload)) {
       // set the provider related default environment variables
       const defaultEnvVars = {};
       transformedData.result.env = R.merge(transformedData.result.env, defaultEnvVars);
@@ -43,7 +40,7 @@ const preInvoke = (data) => {
   const transformedData = R.clone(data);
   const { payload } = transformedData;
 
-  if (isProviderGoogle(payload)) {
+  if (isProvider('google', payload)) {
     const functionParams = {
       event: payload.payload,
       callback: (error, result) => {
@@ -62,7 +59,7 @@ const postInvoke = (data) => {
   const transformedData = R.clone(data);
   const { payload } = transformedData;
 
-  if (isProviderGoogle(payload)) {
+  if (isProvider('google', payload)) {
     if (payload.errorData) {
       // TODO implement Google Cloud Functions error logic here
       transformedData.result.errorData = {
@@ -75,10 +72,5 @@ const postInvoke = (data) => {
   transformedData.result.outputData = transformedData.payload.outputData;
   return Promise.resolve(transformedData);
 };
-
-// helper functions
-function isProviderGoogle(payload) {
-  return payload.functionConfig.provider && payload.functionConfig.provider === 'google';
-}
 
 export { preLoad, postLoad, preInvoke, postInvoke };
