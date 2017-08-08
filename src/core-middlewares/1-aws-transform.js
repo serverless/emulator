@@ -5,16 +5,13 @@
 
 import R from 'ramda';
 import getRuntimeFileExtension from '../utils/getRuntimeFileExtension';
-import getRuntimeExecName from '../utils/getRuntimeExecName';
-import { getPathToFunctionFile, getFunctionName } from '../utils/middlewareHelpers';
+import { getPathToFunctionFile, getFunctionName, isProvider, isRuntime } from '../utils/middlewareHelpers';
 
 const preLoad = (data) => {
   const transformedData = R.clone(data);
   const { payload } = transformedData;
 
-  if (isProviderAws(payload)) {
-    const runtimeExec = getRuntimeExecName(payload.functionConfig.runtime);
-
+  if (isProvider('aws', payload)) {
     // construct the functionName and functionFileName
     const fileExtension = getRuntimeFileExtension(payload.functionConfig.runtime);
     const handler = payload.functionConfig.handler;
@@ -24,7 +21,7 @@ const preLoad = (data) => {
     transformedData.result.functionFileName = `${pathToFuncFile}${fileExtension}`;
 
     // for functions written in Node.js
-    if (runtimeExec === 'node') {
+    if (isRuntime('node', payload)) {
       // set the provider related default environment variables
       const defaultEnvVars = {
         LANG: 'en_US.UTF-8',
@@ -54,7 +51,7 @@ const preInvoke = (data) => {
   const transformedData = R.clone(data);
   const { payload } = transformedData;
 
-  if (isProviderAws(payload)) {
+  if (isProvider('aws', payload)) {
     const startTime = new Date();
     const callback = (error, result) => {
       if (error) {
@@ -113,7 +110,7 @@ const postInvoke = (data) => {
   const transformedData = R.clone(data);
   const { payload } = transformedData;
 
-  if (isProviderAws(payload)) {
+  if (isProvider('aws', payload)) {
     if (transformedData.payload.errorData) {
       transformedData.result.errorData = {
         errorMessage: payload.errorData,
@@ -124,10 +121,5 @@ const postInvoke = (data) => {
   transformedData.result.outputData = transformedData.payload.outputData;
   return Promise.resolve(transformedData);
 };
-
-// helper functions
-function isProviderAws(payload) {
-  return payload.functionConfig.provider && payload.functionConfig.provider === 'aws';
-}
 
 export { preLoad, postLoad, preInvoke, postInvoke };
