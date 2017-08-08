@@ -54,13 +54,52 @@ const preInvoke = (data) => {
   const { payload } = transformedData;
 
   if (isProviderAws(payload)) {
+    const startTime = new Date();
+    const callback = (error, result) => {
+      if (error) {
+        throw new Error(error);
+      } else if (result) {
+        if (result.headers && result.headers['Content-Type'] === 'application/json') {
+          if (result.body) {
+            try {
+              Object.assign(result, {
+                body: JSON.parse(result.body),
+              });
+            } catch (e) {
+              throw new Error('Content-Type of response is application/json but body is not json');
+            }
+          }
+        }
+        console.log(JSON.stringify(result)); // eslint-disable-line
+      }
+    };
     const functionParams = {
       event: payload.payload,
-      context: {},
-      callback: (error, result) => {
-        if (error) throw new Error(error);
-        console.log(JSON.stringify(result)); // eslint-disable-line
+      context: {
+        awsRequestId: 'id',
+        invokeid: 'id',
+        logGroupName: payload.functionConfig.env.LOG_GROUP_NAME,
+        logStreamName: '2015/09/22/[HEAD]13370a84ca4ed8b77c427af260',
+        functionVersion: 'HEAD',
+        isDefaultFunctionVersion: true,
+        functionName: payload.functionConfig.env.FUNCTION_NAME,
+        memoryLimitInMB: '1024',
+        succeed(result) {
+          return this.callback(null, result);
+        },
+        fail(error) {
+          return this.callback(error);
+        },
+        done(error, result) {
+          return this.callback(error, result);
+        },
+        getRemainingTimeInMillis() {
+          return (new Date()).valueOf() - startTime.valueOf();
+        },
+        // NOTE: this is just a quick fix / hack so that the methods above can access the callback
+        callback,
       },
+      callback,
     };
 
     transformedData.result = functionParams;
@@ -73,12 +112,10 @@ const postInvoke = (data) => {
   const transformedData = R.clone(data);
   const { payload } = transformedData;
 
-  if (payload.functionConfig.provider && payload.functionConfig.provider === 'aws') {
+  if (isProviderAws(payload)) {
     if (transformedData.payload.errorData) {
-      // TODO implement AWS Lambda error logic here
       transformedData.result.errorData = {
-        type: 'AWS Error',
-        message: transformedData.payload.errorData,
+        errorMessage: payload.errorData,
       };
     }
   }
