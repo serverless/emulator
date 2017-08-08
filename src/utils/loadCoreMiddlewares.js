@@ -2,7 +2,7 @@ import path from 'path';
 import R from 'ramda';
 import fse from '../utils/fs/fse';
 
-async function loadCoreMiddlewares() {
+const loadCoreMiddlewares = R.memoize(async () => {
   const coreMiddlewaresDir = path.join(__dirname, '..', 'core-middlewares');
 
   return fse.readdirAsync(coreMiddlewaresDir)
@@ -22,6 +22,6 @@ async function loadCoreMiddlewares() {
         };
       }, middlewares);
     });
-}
+});
 
 export default loadCoreMiddlewares;
