@@ -19,6 +19,11 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.23.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-preset-stage-1": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-preset-stage-3": "^6.24.1",
+    "babel-register": "^6.24.1",
     "bluebird": "^3.5.0",
     "decompress": "^4.2.0",
     "fs-extra": "^0.26.7",
@@ -33,10 +38,6 @@
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-preset-env": "^1.6.0",
-    "babel-preset-stage-0": "^6.24.1",
-    "babel-preset-stage-1": "^6.24.1",
-    "babel-preset-stage-2": "^6.24.1",
-    "babel-preset-stage-3": "^6.24.1",
     "eslint": "^4.3.0",
     "eslint-config-airbnb-base": "^11.3.0",
     "eslint-plugin-import": "^2.7.0",
