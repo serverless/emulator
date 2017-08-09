@@ -133,7 +133,9 @@ This abstraction layer makes it easy to introduce other runtimes later on. Furth
 Here's a sample call to invoke an AWS function within the wrapper script (which is written in Node.js). It will require and prepare the function (according to the CLI `options`) and pass the echoed data as the function parameters (via `stdin`) to it:
 
 ```bash
-echo '{ event: { foo: "bar" }, context: {}, callback: (error, result) => {} }' | runtimes/node.js --functionFilePath ~/.serverless/local-emulator/storage/functions/my-service/function-1/code/hello-world.js --functionName helloWorld
+# NOTE: This is not the actual payload. It's used to show the technical parts / architecture of a function invocation
+
+echo '{ event: { foo: "bar" }, context: {}, callback: (error, result) => {} }' | runtimes/node.js <full-path-to-function-file> <exported-function-name>
 ```
 
 ### Middlewares

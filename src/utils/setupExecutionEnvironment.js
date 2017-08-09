@@ -27,14 +27,8 @@ async function setupExecutionEnvironment(serviceName, functionName, functionConf
 
   const childProc = childProcess.spawn(
     exec,
-    [
-      `${pathToScript}`,
-      '--functionFilePath', path.join(pathToFunctionCode, preLoadResult.functionFileName),
-      '--functionName', preLoadResult.functionName,
-    ],
-    {
-      env,
-    },
+    [`${pathToScript}`, path.join(pathToFunctionCode, preLoadResult.functionFileName), preLoadResult.functionName],
+    { env },
   );
 
   // TODO const postLoadResult = await runMiddlewares('postLoad', postLoadPayload);
