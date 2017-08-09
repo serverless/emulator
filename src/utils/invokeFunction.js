@@ -8,11 +8,11 @@ import runMiddlewares from './runMiddlewares';
 async function invokeFunction(serviceName, functionName, functionConfig, proc, payload) {
   const { stdin, stdout, stderr } = proc;
 
-  const preInvokePayload = { serviceName, functionName, functionConfig, payload };
-  const preInvokeResult = await runMiddlewares('preInvoke', preInvokePayload);
+  const preInvokeInput = { serviceName, functionName, functionConfig, payload };
+  const preInvokeOutput = await runMiddlewares('preInvoke', preInvokeInput);
 
   // use stringify module here to preserve the callback function
-  const stdinPayload = String(stringify(preInvokeResult));
+  const stdinPayload = String(stringify(preInvokeOutput));
 
   // send payload to runtime
   stdin.setEncoding('utf-8');
@@ -22,24 +22,24 @@ async function invokeFunction(serviceName, functionName, functionConfig, proc, p
   const errorData = await getErrorData(stderr);
   const outputData = await getOutputData(stdout);
 
-  const postInvokePayload = { serviceName, functionName, functionConfig, payload, errorData, outputData };
-  const postInvokeResult = await runMiddlewares('postInvoke', postInvokePayload);
+  const postInvokeInput = { serviceName, functionName, functionConfig, payload, errorData, outputData };
+  const postInvokeOutput = await runMiddlewares('postInvoke', postInvokeInput);
 
   if (errorData) {
     let error;
     try {
-      error = JSON.parse(postInvokeResult.errorData);
+      error = JSON.parse(postInvokeOutput.errorData);
     } catch (e) {
-      error = postInvokeResult.errorData;
+      error = postInvokeOutput.errorData;
     }
     return error;
   }
 
   let result;
   try {
-    result = JSON.parse(postInvokeResult.outputData);
+    result = JSON.parse(postInvokeOutput.outputData);
   } catch (e) {
-    result = postInvokeResult.outputData;
+    result = postInvokeOutput.outputData;
   }
   return result;
 }

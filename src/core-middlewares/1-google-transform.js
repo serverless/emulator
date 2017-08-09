@@ -9,22 +9,22 @@ import { getPathToFunctionFile, getFunctionName, isProvider, isRuntime } from '.
 
 const preLoad = (data) => {
   const transformedData = R.clone(data);
-  const { payload } = transformedData;
+  const { input } = transformedData;
 
-  if (isProvider('google', payload)) {
+  if (isProvider('google', input)) {
     // construct the functionName and functionFileName
-    const fileExtension = getRuntimeFileExtension(payload.functionConfig.runtime);
-    const handler = payload.functionConfig.handler;
+    const fileExtension = getRuntimeFileExtension(input.functionConfig.runtime);
+    const handler = input.functionConfig.handler;
     const pathToFuncFile = getPathToFunctionFile(handler);
 
-    transformedData.result.functionName = getFunctionName(handler);
-    transformedData.result.functionFileName = `${pathToFuncFile}${fileExtension}`;
+    transformedData.output.functionName = getFunctionName(handler);
+    transformedData.output.functionFileName = `${pathToFuncFile}${fileExtension}`;
 
     // for functions written in Node.js
-    if (isRuntime('node', payload)) {
+    if (isRuntime('node', input)) {
       // set the provider related default environment variables
       const defaultEnvVars = {};
-      transformedData.result.env = R.merge(transformedData.result.env, defaultEnvVars);
+      transformedData.output.env = R.merge(transformedData.output.env, defaultEnvVars);
     }
   }
 
@@ -38,18 +38,18 @@ const postLoad = (data) => {
 
 const preInvoke = (data) => {
   const transformedData = R.clone(data);
-  const { payload } = transformedData;
+  const { input } = transformedData;
 
-  if (isProvider('google', payload)) {
+  if (isProvider('google', input)) {
     const functionParams = {
-      event: payload.payload,
+      event: input.payload,
       callback: (error, result) => {
         if (error) throw new Error(error);
         console.log(JSON.stringify(result)); // eslint-disable-line
       },
     };
 
-    transformedData.result = functionParams;
+    transformedData.output = functionParams;
   }
 
   return Promise.resolve(transformedData);
@@ -57,19 +57,19 @@ const preInvoke = (data) => {
 
 const postInvoke = (data) => {
   const transformedData = R.clone(data);
-  const { payload } = transformedData;
+  const { input } = transformedData;
 
-  if (isProvider('google', payload)) {
-    if (payload.errorData) {
+  if (isProvider('google', input)) {
+    if (input.errorData) {
       // TODO implement Google Cloud Functions error logic here
-      transformedData.result.errorData = {
+      transformedData.output.errorData = {
         type: 'Google Error',
-        message: transformedData.payload.errorData,
+        message: transformedData.input.errorData,
       };
     }
   }
 
-  transformedData.result.outputData = transformedData.payload.outputData;
+  transformedData.output.outputData = transformedData.input.outputData;
   return Promise.resolve(transformedData);
 };
 

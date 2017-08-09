@@ -5,16 +5,16 @@ import getRuntimeExecName from '../utils/getRuntimeExecName';
 
 const preLoad = (data) => {
   const transformedData = R.clone(data);
-  const { payload } = transformedData;
+  const { input } = transformedData;
 
-  if (payload.functionConfig.runtime) {
-    const runtimeExec = getRuntimeExecName(payload.functionConfig.runtime);
+  if (input.functionConfig.runtime) {
+    const runtimeExec = getRuntimeExecName(input.functionConfig.runtime);
 
     if (runtimeExec === 'node') {
       // NOTE this env is necessary for the Node.js runtime!
       // otherwise the child process fails!
       const defaultEnvVars = process.env;
-      transformedData.result.env = R.merge(transformedData.result.env, defaultEnvVars);
+      transformedData.output.env = R.merge(transformedData.output.env, defaultEnvVars);
     }
   }
 

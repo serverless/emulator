@@ -142,7 +142,7 @@ echo '{ event: { foo: "bar" }, context: {}, callback: (error, result) => {} }' |
 
 The Local Emulator provides a middleware concept which makes it possible to use custom code to modify the data which is used inside the Local Emulator when exercising core logic (e.g. setting up the execution environment, invoking functions, etc.).
 
-The core Local Emulators `runMiddleware` functionality ensures that the raw data object which is passed into it will be copied over into a `payload` object and removed from the root of the object. Furthermore it creates a blank `result` object which can be used by middlewares to store the computed results.
+The core Local Emulators `runMiddleware` functionality ensures that the raw data object which is passed into it will be copied over into an `input` object and removed from the root of the object. Furthermore it creates a blank `output` object which can be used by middlewares to store the computed results.
 
 Let's take a quick look at an example to see how this works behind the scenes.
 
@@ -159,26 +159,147 @@ The data will be prepared and passed into the middlewares in the following forma
 
 ```javascript
 {
-  payload: {
+  input: {
     foo: 'bar',
     baz: 'qux'
   },
-  result: {}
+  output: {}
 }
 ```
 
 Middlewares can do whatever they want with this data.
 
-However the computed result should be written into the `result` object since this is returned by the Local Emulators `runMiddlewares` function after all middlewares are executed.
+However the computed result should be written into the `output` object since this is returned by the Local Emulators `runMiddlewares` function after all middlewares are executed.
 
 Middlewares can be implemented against different lifecycle events. Right now the lifecycle events are:
 
-| Lifecycle | Description | Available data | Expected result object |
-| --- | --- | --- | --- |
-| `preLoad` | Before the function is loaded and the execution environment is configured | `{ payload: { serviceName: <string>, functionName <string>, functionConfig: <object> }, result: {} }` | `{ functionName: <string>, functionFileName: <string>, env: <object> }` |
-| `postLoad` | After the function was loaded and the execution environment was configured | `TBD` | `TBD` |
-| `preInvoke` | Right before the payload is passed to the function which should be invoked | `{ payload: { serviceName: <string>, functionName: <string>, functionConfig: <object>, payload: <object> }, result: {} }` | `{ <provider-specific-handler-params> }` **Note:** Those params should include the `callback` parameter! |
-| `postInvoke` | After the function is invoked, but before it's result is passed back via the API | `{ payload: { serviceName: <string>, functionName: <string>, functionConfig: <object>, payload: <object>, errorData: <string>, outputData: <string> }, result: {} }` | `{ errorData: <object>, outputData: <object> }` |
+<table>
+  <tr>
+    <th>Lifecycle</th>
+    <th>Description</th>
+    <th>Provided object</th>
+    <th>Expected returned object</th>
+  </tr>
+  <tr>
+    <td>
+      <code>preLoad</code>
+    </td>
+    <td>
+      Before the function is loaded and the execution environment is configured.
+    </td>
+    <td>
+      <code>
+        {
+          input: {
+            serviceName: <string>,
+            functionName <string>,
+            functionConfig: <object>
+          },
+          output: {}
+        }
+      </code>
+    </td>
+    <td>
+      <code>
+        {
+          input: {
+            // ...snip...
+          },
+          output: {
+            functionName: <string>,
+            functionFileName: <string>,
+            env: <object>
+          }
+        }
+      </code>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>postLoad</code>
+    </td>
+    <td>
+      After the function was loaded and the execution environment was configured.
+    </td>
+    <td>
+      <code>TBD</code>
+    </td>
+    <td>
+      <code>TBD</code>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>preInvoke</code>
+    </td>
+    <td>
+      Right before the payload is passed to the function which should be invoked.
+    </td>
+    <td>
+      <code>
+        {
+          input: {
+            serviceName: <string>,
+            functionName: <string>,
+            functionConfig: <object>,
+            payload: <object>
+          },
+          output: {}
+        }
+      </code>
+    </td>
+    <td>
+      <code>
+        {
+          input: {
+            // ...snip...
+          },
+          output: {
+            // NOTE: those params should
+            // include the callback function parameter!
+            <provider-specific-handler-params>
+          }
+        }
+      </code>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>postInvoke</code>
+    </td>
+    <td>
+      After the function is invoked, but before it's result is passed back via the API.
+    </td>
+    <td>
+      <code>
+        {
+          input: {
+            serviceName: <string>,
+            functionName: <string>,
+            functionConfig: <object>,
+            payload: <object>,
+            errorData: <string>,
+            outputData: <string>
+          },
+          output: {}
+        }
+      </code>
+    </td>
+    <td>
+      <code>
+        {
+          input: {
+            // ...snip...
+          },
+          output: {
+            errorData: <object>,
+            outputData: <object>
+          }
+        }
+      </code>
+    </td>
+  </tr>
+</table>
 
 Take a look at our [`core-middlewares`](./src/core-middlewares) to see some example implementations.
 
