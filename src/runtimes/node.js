@@ -1,10 +1,7 @@
 #!/usr/bin/env node
-import minimist from 'minimist';
 import R from 'ramda';
 
-
-const argv = minimist(process.argv.slice(2));
-const options = R.omit(['_'], argv);
+const args = process.argv.slice(2);
 
 const chunks = [];
 process.stdin.on('data', chunk => chunks.push(chunk));
@@ -16,8 +13,8 @@ process.stdin.on('end', () => {
   // eslint-disable-next-line
   const funcParams = eval(res);
 
-  const functionFilePath = options.functionFilePath;
-  const functionName = options.functionName;
+  const functionFilePath = args[0];
+  const functionName = args[1];
   const func = require(functionFilePath)[functionName]; // eslint-disable-line
 
   func(...R.values(funcParams));
