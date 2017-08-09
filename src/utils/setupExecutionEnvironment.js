@@ -19,15 +19,15 @@ async function setupExecutionEnvironment(serviceName, functionName, functionConf
   const pathToScript = path.join(runtimesDir, script);
   const pathToFunctionCode = getFunctionCodeDirectoryPath(serviceName, functionName);
 
-  const preLoadPayload = { serviceName, functionName, functionConfig };
-  const preLoadResult = await runMiddlewares('preLoad', preLoadPayload);
+  const preLoadInput = { serviceName, functionName, functionConfig };
+  const preLoadOutput = await runMiddlewares('preLoad', preLoadInput);
 
   // combine provider env vars with the function specific env vars
-  const env = R.merge(preLoadResult.env, functionConfig.env);
+  const env = R.merge(preLoadOutput.env, functionConfig.env);
 
   const childProc = childProcess.spawn(
     exec,
-    [`${pathToScript}`, path.join(pathToFunctionCode, preLoadResult.functionFileName), preLoadResult.functionName],
+    [`${pathToScript}`, path.join(pathToFunctionCode, preLoadOutput.functionFileName), preLoadOutput.functionName],
     { env },
   );
 

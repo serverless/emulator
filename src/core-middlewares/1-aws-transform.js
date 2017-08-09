@@ -9,33 +9,33 @@ import { getPathToFunctionFile, getFunctionName, isProvider, isRuntime } from '.
 
 const preLoad = (data) => {
   const transformedData = R.clone(data);
-  const { payload } = transformedData;
+  const { input } = transformedData;
 
-  if (isProvider('aws', payload)) {
+  if (isProvider('aws', input)) {
     // construct the functionName and functionFileName
-    const fileExtension = getRuntimeFileExtension(payload.functionConfig.runtime);
-    const handler = payload.functionConfig.handler;
+    const fileExtension = getRuntimeFileExtension(input.functionConfig.runtime);
+    const handler = input.functionConfig.handler;
     const pathToFuncFile = getPathToFunctionFile(handler);
 
-    transformedData.result.functionName = getFunctionName(handler);
-    transformedData.result.functionFileName = `${pathToFuncFile}${fileExtension}`;
+    transformedData.output.functionName = getFunctionName(handler);
+    transformedData.output.functionFileName = `${pathToFuncFile}${fileExtension}`;
 
     // for functions written in Node.js
-    if (isRuntime('node', payload)) {
+    if (isRuntime('node', input)) {
       // set the provider related default environment variables
       const defaultEnvVars = {
         LANG: 'en_US.UTF-8',
         LAMBDA_TASK_ROOT: '/var/task',
         LAMBDA_RUNTIME_DIR: '/var/runtime',
-        AWS_REGION: payload.functionConfig.region,
-        AWS_DEFAULT_REGION: payload.functionConfig.region,
-        AWS_LAMBDA_LOG_GROUP_NAME: `aws/lambda/${payload.functionConfig.lambdaName}`,
+        AWS_REGION: input.functionConfig.region,
+        AWS_DEFAULT_REGION: input.functionConfig.region,
+        AWS_LAMBDA_LOG_GROUP_NAME: `aws/lambda/${input.functionConfig.lambdaName}`,
         AWS_LAMBDA_LOG_STREAM_NAME: '2016/12/02/[$LATEST]f77ff5e4026c45bda9a9ebcec6bc9cad',
-        AWS_LAMBDA_FUNCTION_NAME: payload.functionConfig.lambdaName,
-        AWS_LAMBDA_FUNCTION_MEMORY_SIZE: payload.functionConfig.memorySize,
+        AWS_LAMBDA_FUNCTION_NAME: input.functionConfig.lambdaName,
+        AWS_LAMBDA_FUNCTION_MEMORY_SIZE: input.functionConfig.memorySize,
         AWS_LAMBDA_FUNCTION_VERSION: '$LATEST',
       };
-      transformedData.result.env = R.merge(transformedData.result.env, defaultEnvVars);
+      transformedData.output.env = R.merge(transformedData.output.env, defaultEnvVars);
     }
   }
 
@@ -49,9 +49,9 @@ const postLoad = (data) => {
 
 const preInvoke = (data) => {
   const transformedData = R.clone(data);
-  const { payload } = transformedData;
+  const { input } = transformedData;
 
-  if (isProvider('aws', payload)) {
+  if (isProvider('aws', input)) {
     const startTime = new Date();
     const callback = (error, result) => {
       if (error) {
@@ -72,15 +72,15 @@ const preInvoke = (data) => {
       }
     };
     const functionParams = {
-      event: payload.payload,
+      event: input.payload,
       context: {
         awsRequestId: 'id',
         invokeid: 'id',
-        logGroupName: `aws/lambda/${payload.functionConfig.lambdaName}`,
+        logGroupName: `aws/lambda/${input.functionConfig.lambdaName}`,
         logStreamName: '2015/09/22/[HEAD]13370a84ca4ed8b77c427af260',
         functionVersion: 'HEAD',
         isDefaultFunctionVersion: true,
-        functionName: payload.functionConfig.lambdaName,
+        functionName: input.functionConfig.lambdaName,
         memoryLimitInMB: '1024',
         succeed(result) {
           return this.callback(null, result);
@@ -100,7 +100,7 @@ const preInvoke = (data) => {
       callback,
     };
 
-    transformedData.result = functionParams;
+    transformedData.output = functionParams;
   }
 
   return Promise.resolve(transformedData);
@@ -108,17 +108,17 @@ const preInvoke = (data) => {
 
 const postInvoke = (data) => {
   const transformedData = R.clone(data);
-  const { payload } = transformedData;
+  const { input } = transformedData;
 
-  if (isProvider('aws', payload)) {
-    if (transformedData.payload.errorData) {
-      transformedData.result.errorData = {
-        errorMessage: payload.errorData,
+  if (isProvider('aws', input)) {
+    if (transformedData.input.errorData) {
+      transformedData.output.errorData = {
+        errorMessage: input.errorData,
       };
     }
   }
 
-  transformedData.result.outputData = transformedData.payload.outputData;
+  transformedData.output.outputData = transformedData.input.outputData;
   return Promise.resolve(transformedData);
 };
 
