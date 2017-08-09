@@ -1,6 +1,14 @@
 # Local Emulator
 
+[![serverless](http://public.serverless.com/badges/v3.svg)](http://www.serverless.com)
+[![Build Status](https://travis-ci.org/serverless/emulator.svg?branch=master)](https://travis-ci.org/serverless/emulator)
+
+[Website](http://www.serverless.com) • [Newsletter](http://eepurl.com/b8dv4P) • [Gitter](https://gitter.im/serverless/serverless) • [Forum](http://forum.serverless.com) • [Meetups](https://github.com/serverless-meetups/main) • [Twitter](https://twitter.com/goserverless)
+
 > Emulate your Serverless functions locally.
+
+
+## Contents
 
 - [Getting started](#getting-started)
 - [Development](#development)
@@ -370,3 +378,14 @@ Response:
 
 - `pong` - `string` - The string the Local Emulator should return
 - `timestamp` - `integer` - Timestamp which indicates when the response was computed
+
+
+## Community
+
+* [Email Updates](http://eepurl.com/b8dv4P)
+* [Serverless Forum](http://forum.serverless.com)
+* [Gitter Chatroom](https://gitter.im/serverless/serverless)
+* [Serverless Meetups](http://www.meetup.com/serverless/)
+* [Facebook](https://www.facebook.com/serverless)
+* [Twitter](https://twitter.com/goserverless)
+* [Contact Us](mailto:hello@serverless.com)
