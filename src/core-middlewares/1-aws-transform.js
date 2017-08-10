@@ -3,9 +3,10 @@
 
 /* eslint-disable no-use-before-define */
 
+import path from 'path';
 import R from 'ramda';
 import getRuntimeFileExtension from '../utils/getRuntimeFileExtension';
-import { getPathToFunctionFile, getFunctionName, isProvider, isRuntime } from '../utils/middlewareHelpers';
+import { isProvider, isRuntime } from '../utils/middlewareHelpers';
 
 const preLoad = (data) => {
   const transformedData = R.clone(data);
@@ -15,9 +16,10 @@ const preLoad = (data) => {
     // construct the functionName and functionFileName
     const fileExtension = getRuntimeFileExtension(input.functionConfig.runtime);
     const handler = input.functionConfig.handler;
-    const pathToFuncFile = getPathToFunctionFile(handler);
+    const functionName = handler.split('.')[1];
+    const pathToFuncFile = handler.split('.')[0].replace(/\//g, path.sep);
 
-    transformedData.output.functionName = getFunctionName(handler);
+    transformedData.output.functionName = functionName;
     transformedData.output.functionFileName = `${pathToFuncFile}${fileExtension}`;
 
     // for functions written in Node.js
