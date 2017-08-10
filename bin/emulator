@@ -2,7 +2,7 @@
 
 const packageJson = require('../package.json');
 
-if (process.argv[2] === 'version') {
+if (process.argv[2] === 'version' || process.argv[2] === 'ping') {
   console.log(packageJson.version);
 } else {
   require('../dist/index');
