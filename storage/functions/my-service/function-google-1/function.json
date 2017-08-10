@@ -1,5 +1,5 @@
 {
-  "handler": "index.helloWorld",
+  "handler": "helloWorld",
   "provider": "google",
   "runtime": "nodejs",
   "env": {

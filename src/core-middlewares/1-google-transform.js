@@ -5,7 +5,7 @@
 
 import R from 'ramda';
 import getRuntimeFileExtension from '../utils/getRuntimeFileExtension';
-import { getPathToFunctionFile, getFunctionName, isProvider, isRuntime } from '../utils/middlewareHelpers';
+import { isProvider, isRuntime } from '../utils/middlewareHelpers';
 
 const preLoad = (data) => {
   const transformedData = R.clone(data);
@@ -14,10 +14,10 @@ const preLoad = (data) => {
   if (isProvider('google', input)) {
     // construct the functionName and functionFileName
     const fileExtension = getRuntimeFileExtension(input.functionConfig.runtime);
-    const handler = input.functionConfig.handler;
-    const pathToFuncFile = getPathToFunctionFile(handler);
+    const functionName = input.functionConfig.handler;
+    const pathToFuncFile = 'index';
 
-    transformedData.output.functionName = getFunctionName(handler);
+    transformedData.output.functionName = functionName;
     transformedData.output.functionFileName = `${pathToFuncFile}${fileExtension}`;
 
     // for functions written in Node.js
