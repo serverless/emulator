@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
-if (process.argv[2] === 'ping') {
-  console.log('pong');
+const packageJson = require('../package.json');
+
+if (process.argv[2] === 'version') {
+  console.log(packageJson.version);
 } else {
   require('../dist/index');
 }
