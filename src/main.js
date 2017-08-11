@@ -16,6 +16,8 @@ import readFunctionConfigFile from './utils/readFunctionConfigFile';
 import setupExecutionEnvironment from './utils/setupExecutionEnvironment';
 import invokeFunction from './utils/invokeFunction';
 
+process.title = 'Serverless Local Emulator';
+
 async function run() {
   const app = new Koa();
   app.use(bodyParser());
@@ -49,6 +51,8 @@ async function run() {
       copyDirContentsSync(functionConfig.servicePath, functionCodeDirectoryPath);
       // await unzipFunctionCode(zipFilePath, serviceName, functionName);
       await writeFunctionConfigFile(functionConfig, serviceName, functionName);
+
+      console.log(`Deployed function ${service}-${fn}`);
 
       ctx.response.type = 'json';
       ctx.body = ctx.request.body;
@@ -88,7 +92,7 @@ async function run() {
 
   app.listen(port, () => {
     // eslint-disable-next-line
-    console.log(`Serverless Local Emulator Daemon listening at localhost:${port}...`);
+    console.log(`Local Emulator listening at localhost:${port}`);
   });
 }
 
