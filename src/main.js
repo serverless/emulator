@@ -92,7 +92,7 @@ async function run() {
 
   app.listen(port, () => {
     // eslint-disable-next-line
-    console.log(`Local Emulator listening at localhost:${port}`);
+    console.log(`Local Emulator listening at http://localhost:${port}`);
   });
 }
 
