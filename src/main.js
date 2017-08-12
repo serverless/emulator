@@ -52,7 +52,7 @@ async function run() {
       // await unzipFunctionCode(zipFilePath, serviceName, functionName);
       await writeFunctionConfigFile(functionConfig, serviceName, functionName);
 
-      console.log(`Deployed function ${service}-${fn}`);
+      console.log(`Function deployed: ${service}-${fn}`);
 
       ctx.response.type = 'json';
       ctx.body = ctx.request.body;
@@ -92,7 +92,7 @@ async function run() {
 
   app.listen(port, () => {
     // eslint-disable-next-line
-    console.log(`Local Emulator listening on http://localhost:${port}`);
+    console.log(`Local Emulator listening on: http://localhost:${port}`);
   });
 }
 
