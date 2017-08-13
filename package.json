@@ -33,6 +33,7 @@
     "koa-route": "^3.2.0",
     "minimist": "^1.2.0",
     "node-stringify": "^0.2.0",
+    "portfinder": "^1.0.13",
     "ramda": "^0.24.1"
   },
   "devDependencies": {

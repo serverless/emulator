@@ -12,7 +12,7 @@ import copyDirContentsSync from './utils/fs/copyDirContentsSync';
 import getFunctionCodeDirectoryPath from './utils/getFunctionCodeDirectoryPath';
 import writeFunctionConfigFile from './utils/writeFunctionConfigFile';
 import readFunctionConfigFile from './utils/readFunctionConfigFile';
-import setupExecutionEnvironment from './utils/setupExecutionEnvironment';
+import generateContainer from './utils/generateContainer';
 import invokeFunction from './utils/invokeFunction';
 
 process.title = 'Serverless Local Emulator';
@@ -36,6 +36,7 @@ async function run() {
   const argv = minimist(process.argv.slice(2));
   const options = R.omit(['_'], argv);
   const port = options.port || 4002;
+  const debug = options.debug || false;
 
   const functions = {
     deploy: async (ctx) => {
@@ -59,8 +60,8 @@ async function run() {
       const { payload, functionId } = ctx.request.body;
 
       const functionConfig = await readFunctionConfigFile(functionId);
-      const spawnedProc = await setupExecutionEnvironment(functionId, functionConfig);
-      const result = await invokeFunction(functionId, functionConfig, spawnedProc, payload);
+      const container = await generateContainer(functionId, functionConfig, { debug });
+      const result = await invokeFunction(functionId, functionConfig, container, payload);
 
       ctx.response.type = 'json';
       ctx.body = result;

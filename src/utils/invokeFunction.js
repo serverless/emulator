@@ -5,9 +5,8 @@ import stringify from 'node-stringify';
 import BbPromise from 'bluebird';
 import runMiddlewares from './runMiddlewares';
 
-async function invokeFunction(functionId, functionConfig, proc, payload) {
-  const { stdin, stdout, stderr } = proc;
-
+async function invokeFunction(functionId, functionConfig, container, payload) {
+  const { stdin, stdout, stderr } = container.process;
   const preInvokeInput = { functionId, functionConfig, payload };
   const preInvokeOutput = await runMiddlewares('preInvoke', preInvokeInput);
 
@@ -41,6 +40,7 @@ async function invokeFunction(functionId, functionConfig, proc, payload) {
   } catch (e) {
     result = postInvokeOutput.outputData;
   }
+  container.close();
   return result;
 }
 
