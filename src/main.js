@@ -40,7 +40,7 @@ async function run() {
   const functions = {
     deploy: async (ctx) => {
       const { functionId, functionConfig } = ctx.request.body;
-      vaildateFunctionId(functionId);
+      validateFunctionId(functionId);
 
       const functionCodeDirectoryPath = getFunctionCodeDirectoryPath(functionId);
 
