@@ -1,8 +1,8 @@
 import readFile from './fs/readFile';
 import getFunctionConfigFilePath from './getFunctionConfigFilePath';
 
-async function readFunctionConfigFile(serviceName, functionName) {
-  const functionConfigFilePath = getFunctionConfigFilePath(serviceName, functionName);
+async function readFunctionConfigFile(functionId) {
+  const functionConfigFilePath = getFunctionConfigFilePath(functionId);
   return readFile(functionConfigFilePath);
 }
 
