@@ -48,7 +48,8 @@ async function run() {
       // await unzipFunctionCode(zipFilePath, functionId);
       await writeFunctionConfigFile(functionConfig, functionId);
 
-      console.log(`Function deployed: ${functionId}`); // eslint-disable-line
+      // eslint-disable-next-line
+      console.log(`Function deployed: ${functionId}`);
 
       ctx.response.type = 'json';
       ctx.body = ctx.request.body;
