@@ -48,14 +48,12 @@ async function run() {
       // await unzipFunctionCode(zipFilePath, functionId);
       await writeFunctionConfigFile(functionConfig, functionId);
 
-      console.log(`Deployed function ${functionId}`);
-
       ctx.response.type = 'json';
       ctx.body = ctx.request.body;
     },
 
     invoke: async (ctx) => {
-      const { payload, functionId, method } = ctx.request.body;
+      const { payload, functionId } = ctx.request.body;
 
       const functionConfig = await readFunctionConfigFile(functionId);
       const spawnedProc = await setupExecutionEnvironment(functionId, functionConfig);
