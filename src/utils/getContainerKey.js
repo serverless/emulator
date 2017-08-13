@@ -1,7 +1,7 @@
-let containerNumber = 0
+let containerNumber = 0;
 
 function getContainerKey(runtime, functionId) {
-  containerNumber++;
+  containerNumber += 1;
   return `${runtime}+${functionId}+${containerNumber}`;
 }
 

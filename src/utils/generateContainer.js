@@ -10,7 +10,7 @@ import runMiddlewares from './runMiddlewares';
 
 const runtimesDir = path.join(__dirname, '..', 'runtimes');
 
-let containers = {}
+let containers = {};
 
 async function generateContainer(functionId, functionConfig, containerConfig) {
   const runtime = functionConfig.runtime;
@@ -41,7 +41,7 @@ async function generateContainer(functionId, functionConfig, containerConfig) {
     { env },
   );
 
-  //childProc.stdout.on('data', (data) => console.log(data.toString()))
+  // childProc.stdout.on('data', (data) => console.log(data.toString()))
   // TODO const postLoadResult = await runMiddlewares('postLoad', postLoadPayload);
 
   const close = () => {

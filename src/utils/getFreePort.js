@@ -1,4 +1,5 @@
-const portfinder = require('portfinder');
+import portfinder from 'portfinder';
+
 function getFreePort(basePort) {
   portfinder.basePort = basePort;
   return portfinder.getPortPromise();

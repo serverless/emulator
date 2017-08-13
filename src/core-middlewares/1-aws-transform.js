@@ -42,7 +42,7 @@ const preLoad = async (data) => {
       transformedData.output.env = R.merge(transformedData.output.env, defaultEnvVars);
       if (containerConfig.debug) {
         const debugPort = await getFreePort(9229);
-        //TODO BRN: --inspect only works for node 6.3+ need to support node 4 here as well
+        // TODO BRN: --inspect only works for node 6.3+ need to support node 4 here as well
         transformedData.output.execArgs = [`--inspect=${debugPort}`];
       }
     }
@@ -51,9 +51,7 @@ const preLoad = async (data) => {
   return transformedData;
 };
 
-const postLoad = async (data) => {
-  return data;
-};
+const postLoad = async data => data;
 
 const preInvoke = (data) => {
   const transformedData = R.clone(data);

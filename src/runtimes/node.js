@@ -2,7 +2,7 @@
 import R from 'ramda';
 import minimist from 'minimist';
 
-const slice = R.test(/^--inspect/, process.argv[1]) ? 3 : 2
+const slice = R.test(/^--inspect/, process.argv[1]) ? 3 : 2;
 const args = minimist(process.argv.slice(slice));
 
 const chunks = [];
