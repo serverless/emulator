@@ -5,6 +5,7 @@
 
 import path from 'path';
 import R from 'ramda';
+import getFreePort from '../utils/getFreePort';
 import getRuntimeFileExtension from '../utils/getRuntimeFileExtension';
 import { isProvider, isRuntime } from '../utils/middlewareHelpers';
 
@@ -14,8 +15,9 @@ const preLoad = (data) => {
 
   if (isProvider('aws', input)) {
     // construct the functionName and functionFileName
-    const fileExtension = getRuntimeFileExtension(input.functionConfig.runtime);
-    const handler = input.functionConfig.handler;
+    const { functionConfig, containerConfig } = input;
+    const fileExtension = getRuntimeFileExtension(functionConfig.runtime);
+    const handler = functionConfig.handler;
     const functionName = handler.split('.')[1];
     const pathToFuncFile = handler.split('.')[0].replace(/\//g, path.sep);
 
@@ -38,6 +40,11 @@ const preLoad = (data) => {
         AWS_LAMBDA_FUNCTION_VERSION: '$LATEST',
       };
       transformedData.output.env = R.merge(transformedData.output.env, defaultEnvVars);
+      if (containerConfig.debug) {
+        const debugPort = getFreePort(9229);
+        //TODO BRN: --inspect only works for node 6.3+ need to support node 4 here as well
+        transformedData.output.execArgs = ['--inspect', debugPort];
+      }
     }
   }
 

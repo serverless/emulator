@@ -2,6 +2,7 @@ import path from 'path';
 import childProcess from 'child_process';
 import R from 'ramda';
 import validateRuntime from './validateRuntime';
+import getContainerKey from './getContainerKey';
 import getRuntimeScriptName from './getRuntimeScriptName';
 import getRuntimeExecName from './getRuntimeExecName';
 import getFunctionCodeDirectoryPath from './getFunctionCodeDirectoryPath';
@@ -9,9 +10,16 @@ import runMiddlewares from './runMiddlewares';
 
 const runtimesDir = path.join(__dirname, '..', 'runtimes');
 
-async function setupExecutionEnvironment(serviceName, functionName, functionConfig) {
+let containers = {}
+
+async function generateContainer(serviceName, functionName, functionConfig, containerConfig) {
   const runtime = functionConfig.runtime;
   validateRuntime(runtime);
+
+  const key = getContainerKey(runtime, serviceName, functionName);
+  if (R.has(key, containers)) {
+    return R.prop(key, containers);
+  }
 
   const script = getRuntimeScriptName(runtime);
   const exec = getRuntimeExecName(runtime);
@@ -19,25 +27,40 @@ async function setupExecutionEnvironment(serviceName, functionName, functionConf
   const pathToScript = path.join(runtimesDir, script);
   const pathToFunctionCode = getFunctionCodeDirectoryPath(serviceName, functionName);
 
-  const preLoadInput = { serviceName, functionName, functionConfig };
+  const preLoadInput = { serviceName, functionName, functionConfig, containerConfig };
   const preLoadOutput = await runMiddlewares('preLoad', preLoadInput);
 
   // combine provider env vars with the function specific env vars
   const env = R.merge(preLoadOutput.env, functionConfig.env);
+  let execArgs = preLoadOutput.execArgs || [];
+  execArgs = execArgs.concat([`${pathToScript}`, path.join(pathToFunctionCode, preLoadOutput.functionFileName), preLoadOutput.functionName]);
 
   const childProc = childProcess.spawn(
     exec,
-    [`${pathToScript}`, path.join(pathToFunctionCode, preLoadOutput.functionFileName), preLoadOutput.functionName],
+    execArgs,
     { env },
   );
 
+  childProc.stdout.on('data', (data) => console.log(data.toString()))
   // TODO const postLoadResult = await runMiddlewares('postLoad', postLoadPayload);
 
-  return {
-    stdin: childProc.stdin,
-    stdout: childProc.stdout,
-    stderr: childProc.stderr,
+  const close = () => {
+    if (!childProc.killed) {
+      childProc.kill();
+    }
+    childProc.removeAllListeners();
+    containers = R.dissoc(key, containers);
   };
+
+  const container = {
+    close,
+    key,
+    process: childProc,
+    runtime,
+  };
+
+  containers = R.assoc(key, container, containers);
+  return container;
 }
 
-export default setupExecutionEnvironment;
+export default generateContainer;
