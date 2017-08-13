@@ -14,8 +14,9 @@ process.stdin.on('end', () => {
   const funcParams = eval(res);
 
   const functionFilePath = args[0];
-  const functionName = args[1];
-  const func = require(functionFilePath)[functionName]; // eslint-disable-line
+  const functionPropPath = args[1];
+  const imported = require(functionFilePath); // eslint-disable-line
+  const func = functionPropPath ? imported[functionPropPath] : imported;
 
   func(...R.values(funcParams));
 });

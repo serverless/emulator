@@ -1,8 +1,8 @@
 import writeFile from './fs/writeFile';
 import getFunctionConfigFilePath from './getFunctionConfigFilePath';
 
-async function writeFunctionJsonFile(functionConfig, serviceName, functionName) {
-  const functionConfigFilePath = getFunctionConfigFilePath(serviceName, functionName);
+async function writeFunctionJsonFile(functionConfig, functionId) {
+  const functionConfigFilePath = getFunctionConfigFilePath(functionId);
   return writeFile(functionConfigFilePath, functionConfig);
 }
 

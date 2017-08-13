@@ -12,12 +12,12 @@ const preLoad = (data) => {
   const { input } = transformedData;
 
   if (isProvider('google', input)) {
-    // construct the functionName and functionFileName
+    // construct the functionPropPath and functionFileName
     const fileExtension = getRuntimeFileExtension(input.functionConfig.runtime);
-    const functionName = input.functionConfig.handler;
+    const functionPropPath = input.functionConfig.handler;
     const pathToFuncFile = 'index';
 
-    transformedData.output.functionName = functionName;
+    transformedData.output.functionPropPath = functionPropPath;
     transformedData.output.functionFileName = `${pathToFuncFile}${fileExtension}`;
 
     // for functions written in Node.js

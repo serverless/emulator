@@ -5,8 +5,7 @@ import router from 'koa-route';
 import bodyParser from 'koa-bodyparser';
 import minimist from 'minimist';
 import R from 'ramda';
-import validateServiceName from './utils/validateServiceName';
-import validateFunctionName from './utils/validateFunctionName';
+import validateFunctionId from './utils/validateFunctionId';
 // import validateZipFilePath from './utils/validateZipFilePath';
 // import unzipFunctionCode from './utils/unzipFunctionCode';
 import copyDirContentsSync from './utils/fs/copyDirContentsSync';
@@ -39,34 +38,28 @@ async function run() {
   const port = options.port || 4002;
 
   const functions = {
-    deploy: async (ctx, service, fn) => {
-      const requestBody = ctx.request.body;
-      const serviceName = validateServiceName(service);
-      const functionName = validateFunctionName(fn);
-      // const zipFilePath = validateZipFilePath(requestBody.zipFilePath);
-      const functionConfig = requestBody;
+    deploy: async (ctx) => {
+      const { functionId, functionConfig } = ctx.request.body;
+      vaildateFunctionId(functionId);
 
-      const functionCodeDirectoryPath = getFunctionCodeDirectoryPath(service, fn);
+      const functionCodeDirectoryPath = getFunctionCodeDirectoryPath(functionId);
 
       copyDirContentsSync(functionConfig.servicePath, functionCodeDirectoryPath);
-      // await unzipFunctionCode(zipFilePath, serviceName, functionName);
-      await writeFunctionConfigFile(functionConfig, serviceName, functionName);
+      // await unzipFunctionCode(zipFilePath, functionId);
+      await writeFunctionConfigFile(functionConfig, functionId);
 
-      console.log(`Deployed function ${service}-${fn}`);
+      console.log(`Deployed function ${functionId}`);
 
       ctx.response.type = 'json';
       ctx.body = ctx.request.body;
     },
 
-    invoke: async (ctx, service, fn) => {
-      const requestBody = ctx.request.body;
-      const serviceName = validateServiceName(service);
-      const functionName = validateFunctionName(fn);
-      const payload = requestBody.payload;
+    invoke: async (ctx) => {
+      const { payload, functionId, method } = ctx.request.body;
 
-      const functionConfig = await readFunctionConfigFile(serviceName, functionName);
-      const spawnedProc = await setupExecutionEnvironment(serviceName, functionName, functionConfig);
-      const result = await invokeFunction(serviceName, functionName, functionConfig, spawnedProc, payload);
+      const functionConfig = await readFunctionConfigFile(functionId);
+      const spawnedProc = await setupExecutionEnvironment(functionId, functionConfig);
+      const result = await invokeFunction(functionId, functionConfig, spawnedProc, payload);
 
       ctx.response.type = 'json';
       ctx.body = result;
@@ -86,8 +79,8 @@ async function run() {
     },
   };
 
-  app.use(router.post('/v0/emulator/api/deploy/:service/:fn', functions.deploy));
-  app.use(router.post('/v0/emulator/api/invoke/:service/:fn', functions.invoke));
+  app.use(router.post('/v0/emulator/api/function/deploy', functions.deploy));
+  app.use(router.post('/v0/emulator/api/function/invoke', functions.invoke));
   app.use(router.post('/v0/emulator/api/utils/heartbeat', utils.heartbeat));
 
   app.listen(port, () => {
