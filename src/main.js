@@ -47,6 +47,7 @@ async function run() {
       copyDirContentsSync(functionConfig.servicePath, functionCodeDirectoryPath);
       // await unzipFunctionCode(zipFilePath, functionId);
       await writeFunctionConfigFile(functionConfig, functionId);
+
       console.log(`Function deployed: ${functionId}`); // eslint-disable-line
 
       ctx.response.type = 'json';
