@@ -12,7 +12,7 @@ const runtimesDir = path.join(__dirname, '..', 'runtimes');
 
 let containers = {}
 
-async function generateContainer(serviceName, functionName, functionConfig, containerConfig) {
+async function generateContainer(functionId, functionConfig, containerConfig) {
   const runtime = functionConfig.runtime;
   validateRuntime(runtime);
 
@@ -25,15 +25,15 @@ async function generateContainer(serviceName, functionName, functionConfig, cont
   const exec = getRuntimeExecName(runtime);
 
   const pathToScript = path.join(runtimesDir, script);
-  const pathToFunctionCode = getFunctionCodeDirectoryPath(serviceName, functionName);
+  const pathToFunctionCode = getFunctionCodeDirectoryPath(functionId);
 
-  const preLoadInput = { serviceName, functionName, functionConfig, containerConfig };
+  const preLoadInput = { functionId, functionConfig, containerConfig };
   const preLoadOutput = await runMiddlewares('preLoad', preLoadInput);
 
   // combine provider env vars with the function specific env vars
   const env = R.merge(preLoadOutput.env, functionConfig.env);
   let execArgs = preLoadOutput.execArgs || [];
-  execArgs = execArgs.concat([`${pathToScript}`, path.join(pathToFunctionCode, preLoadOutput.functionFileName), preLoadOutput.functionName]);
+  execArgs = execArgs.concat([`${pathToScript}`, path.join(pathToFunctionCode, preLoadOutput.functionFileName), preLoadOutput.functionPropPath]);
 
   const childProc = childProcess.spawn(
     exec,

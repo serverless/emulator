@@ -89,10 +89,9 @@ Functions are deployed via the [API](#apis) and are stored in the `~/.serverless
 ```
 |__ storage
     |__ functions
-        |__ <service-name>
-            |__ <function-name>
-                |__ code
-                |__ function.json
+        |__ <function-id>
+            |__ code
+            |__ function.json
 ```
 
 The root directory is the `storage` directory. It's a place where all artifacts will be stored.
@@ -109,7 +108,7 @@ The proposed directory structure makes it easy for the Local Emulator to follow 
 
 On every function deployment the following happens behind the scenes:
 
-- For every `service` and `function` a separate directory will be created (if not already present)
+- For every `function-id` a separate directory will be created (if not already present)
 - The `.zip` file will be extracted and moved into the `code` directory
 - The `function` configuration which is passed in via the API will be written into the `function.json` file
 
@@ -119,14 +118,14 @@ Every function needs information about its configuration. This information is pa
 
 Upon deployment this data is persisted in the `function.json` file.
 
-The `function.json` files can be found in `~/.serverless/local-emulator/storage/functions/<service-name>/<function-name>`.
+The `function.json` files can be found in `~/.serverless/local-emulator/storage/functions/<function-id>`.
 
 The Local Emulator needs those file to e.g. make decision which [middlewares](#middlewares) to execute or which runtime-specific wrapper to use.
 
 Here's a list with different example functions and their corresponding provider-related `function.json` config files:
 
-- [Example AWS function](./storage/functions/my-service/function-aws-1)
-- [Example Google function](./storage/functions/my-service/function-google-1)
+- [Example AWS function](./storage/functions/my-service-function-aws-1)
+- [Example Google function](./storage/functions/my-service-function-google-1)
 
 ### Function invocation
 
@@ -199,8 +198,7 @@ Middlewares can be implemented against different lifecycle events. Right now the
       <code>
         {
           input: {
-            serviceName: <string>,
-            functionName <string>,
+            functionId <string>,
             functionConfig: <object>
           },
           output: {}
@@ -214,8 +212,7 @@ Middlewares can be implemented against different lifecycle events. Right now the
             // ...snip...
           },
           output: {
-            functionName: <string>,
-            functionFileName: <string>,
+            functionId: <string>,
             env: <object>
           }
         }
@@ -247,8 +244,7 @@ Middlewares can be implemented against different lifecycle events. Right now the
       <code>
         {
           input: {
-            serviceName: <string>,
-            functionName: <string>,
+            functionId: <string>,
             functionConfig: <object>,
             payload: <object>
           },
@@ -282,8 +278,7 @@ Middlewares can be implemented against different lifecycle events. Right now the
       <code>
         {
           input: {
-            serviceName: <string>,
-            functionName: <string>,
+            functionId: <string>,
             functionConfig: <object>,
             payload: <object>,
             errorData: <string>,
@@ -334,31 +329,29 @@ The Local Emulator exposes a HTTP API which makes it possible for other services
 
 ##### Deploy function
 
-`POST /v0/emulator/api/functions`
+`POST /v0/emulator/api/function/deploy`
 
 Request:
 
-- `functionName` - `string` - **required** The name of the function
-- `serviceName` - `string` - **required** The service the function belongs to
+- `functionId` - `string` - **required** The id of the function
 - `functionConfig` - `object`: - **required** Additional (provider dependent) function configuration
 - `zipFilePath` - `string` - **required** The path to the local zip file
 
 Response:
 
-- `functionName` - `string` - The name of the function
-- `serviceName` - `string` - The service the function belongs to
+- `functionId` - `string` - The id of the function
 - `functionConfig` - `object` - Additional (provider dependent) function configuration
 - `zipFilePath` - `string` - The path to the local zip file
 
 ##### Invoke function
 
-`POST /v0/emulator/api/functions/invoke`
+`POST /v0/emulator/api/function/invoke`
 
 Request:
 
-- `functionName` - `string` - **required** The name of the function
-- `serviceName` - `string` - **required** The service the function belongs to
+- `functionId` - `string` - **required** The id of the function
 - `payload` - `object` - **required** The event payload the function should receive
+- `method` - `string` - The method of invocation (`async` / `sync`) **default** `async`
 
 Response:
 

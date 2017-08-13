@@ -1,8 +1,8 @@
 import path from 'path';
 import getFunctionDirectoryPath from './getFunctionDirectoryPath';
 
-function getFunctionCodeDirectoryPath(serviceName, functionName) {
-  const pathToFunctionDirectory = getFunctionDirectoryPath(serviceName, functionName);
+function getFunctionCodeDirectoryPath(functionId) {
+  const pathToFunctionDirectory = getFunctionDirectoryPath(functionId);
   return path.join(pathToFunctionDirectory, 'code');
 }
 

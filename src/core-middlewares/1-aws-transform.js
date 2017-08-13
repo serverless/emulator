@@ -14,14 +14,14 @@ const preLoad = (data) => {
   const { input } = transformedData;
 
   if (isProvider('aws', input)) {
-    // construct the functionName and functionFileName
+    // construct the functionPropPath and functionFileName
     const { functionConfig, containerConfig } = input;
     const fileExtension = getRuntimeFileExtension(functionConfig.runtime);
     const handler = functionConfig.handler;
-    const functionName = handler.split('.')[1];
+    const functionPropPath = handler.split('.')[1];
     const pathToFuncFile = handler.split('.')[0].replace(/\//g, path.sep);
 
-    transformedData.output.functionName = functionName;
+    transformedData.output.functionPropPath = functionPropPath;
     transformedData.output.functionFileName = `${pathToFuncFile}${fileExtension}`;
 
     // for functions written in Node.js
