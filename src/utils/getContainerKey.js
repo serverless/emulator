@@ -1,8 +1,8 @@
 let containerNumber = 0
 
-function getContainerKey(runtime, serviceName, functionName) {
+function getContainerKey(runtime, functionId) {
   containerNumber++;
-  return `${runtime}+${serviceName}+${functionName}+${containerNumber}`;
+  return `${runtime}+${functionId}+${containerNumber}`;
 }
 
 export default getContainerKey;

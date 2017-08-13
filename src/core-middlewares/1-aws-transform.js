@@ -9,7 +9,7 @@ import getFreePort from '../utils/getFreePort';
 import getRuntimeFileExtension from '../utils/getRuntimeFileExtension';
 import { isProvider, isRuntime } from '../utils/middlewareHelpers';
 
-const preLoad = (data) => {
+const preLoad = async (data) => {
   const transformedData = R.clone(data);
   const { input } = transformedData;
 
@@ -41,19 +41,18 @@ const preLoad = (data) => {
       };
       transformedData.output.env = R.merge(transformedData.output.env, defaultEnvVars);
       if (containerConfig.debug) {
-        const debugPort = getFreePort(9229);
+        const debugPort = await getFreePort(9229);
         //TODO BRN: --inspect only works for node 6.3+ need to support node 4 here as well
-        transformedData.output.execArgs = ['--inspect', debugPort];
+        transformedData.output.execArgs = [`--inspect=${debugPort}`];
       }
     }
   }
 
-  return Promise.resolve(transformedData);
+  return transformedData;
 };
 
-const postLoad = (data) => {
-  const transformedData = data;
-  return Promise.resolve(transformedData);
+const postLoad = async (data) => {
+  return data;
 };
 
 const preInvoke = (data) => {

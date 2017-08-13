@@ -1,6 +1,6 @@
 const portfinder = require('portfinder');
-function getFreePort(baseport) {
-  portfinder.baseport = baseport;
+function getFreePort(basePort) {
+  portfinder.basePort = basePort;
   return portfinder.getPortPromise();
 }
 

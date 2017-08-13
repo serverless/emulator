@@ -16,7 +16,7 @@ async function generateContainer(functionId, functionConfig, containerConfig) {
   const runtime = functionConfig.runtime;
   validateRuntime(runtime);
 
-  const key = getContainerKey(runtime, serviceName, functionName);
+  const key = getContainerKey(runtime, functionId);
   if (R.has(key, containers)) {
     return R.prop(key, containers);
   }
@@ -41,7 +41,7 @@ async function generateContainer(functionId, functionConfig, containerConfig) {
     { env },
   );
 
-  childProc.stdout.on('data', (data) => console.log(data.toString()))
+  //childProc.stdout.on('data', (data) => console.log(data.toString()))
   // TODO const postLoadResult = await runMiddlewares('postLoad', postLoadPayload);
 
   const close = () => {
