@@ -9,7 +9,7 @@ import runMiddlewares from './runMiddlewares';
 
 const runtimesDir = path.join(__dirname, '..', 'runtimes');
 
-async function setupExecutionEnvironment(serviceName, functionName, functionConfig) {
+async function setupExecutionEnvironment(functionId, functionConfig) {
   const runtime = functionConfig.runtime;
   validateRuntime(runtime);
 
@@ -17,9 +17,9 @@ async function setupExecutionEnvironment(serviceName, functionName, functionConf
   const exec = getRuntimeExecName(runtime);
 
   const pathToScript = path.join(runtimesDir, script);
-  const pathToFunctionCode = getFunctionCodeDirectoryPath(serviceName, functionName);
+  const pathToFunctionCode = getFunctionCodeDirectoryPath(functionId);
 
-  const preLoadInput = { serviceName, functionName, functionConfig };
+  const preLoadInput = { functionId, functionConfig };
   const preLoadOutput = await runMiddlewares('preLoad', preLoadInput);
 
   // combine provider env vars with the function specific env vars
@@ -27,7 +27,7 @@ async function setupExecutionEnvironment(serviceName, functionName, functionConf
 
   const childProc = childProcess.spawn(
     exec,
-    [`${pathToScript}`, path.join(pathToFunctionCode, preLoadOutput.functionFileName), preLoadOutput.functionName],
+    [`${pathToScript}`, path.join(pathToFunctionCode, preLoadOutput.functionFileName), preLoadOutput.functionPropPath],
     { env },
   );
 

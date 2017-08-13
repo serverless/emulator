@@ -5,10 +5,10 @@ import stringify from 'node-stringify';
 import BbPromise from 'bluebird';
 import runMiddlewares from './runMiddlewares';
 
-async function invokeFunction(serviceName, functionName, functionConfig, proc, payload) {
+async function invokeFunction(functionId, functionConfig, proc, payload) {
   const { stdin, stdout, stderr } = proc;
 
-  const preInvokeInput = { serviceName, functionName, functionConfig, payload };
+  const preInvokeInput = { functionId, functionConfig, payload };
   const preInvokeOutput = await runMiddlewares('preInvoke', preInvokeInput);
 
   // use stringify module here to preserve the callback function
@@ -22,7 +22,7 @@ async function invokeFunction(serviceName, functionName, functionConfig, proc, p
   const errorData = await getErrorData(stderr);
   const outputData = await getOutputData(stdout);
 
-  const postInvokeInput = { serviceName, functionName, functionConfig, payload, errorData, outputData };
+  const postInvokeInput = { functionId, functionConfig, payload, errorData, outputData };
   const postInvokeOutput = await runMiddlewares('postInvoke', postInvokeInput);
 
   if (errorData) {

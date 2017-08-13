@@ -1,8 +1,8 @@
 import decompress from 'decompress';
 import getFunctionCodeDirectoryPath from './getFunctionCodeDirectoryPath';
 
-async function unzipFunctionCode(zipFilePath, serviceName, functionName) {
-  const functionCodeDirectoryPath = getFunctionCodeDirectoryPath(serviceName, functionName);
+async function unzipFunctionCode(zipFilePath, functionId) {
+  const functionCodeDirectoryPath = getFunctionCodeDirectoryPath(functionId);
   return decompress(zipFilePath, functionCodeDirectoryPath);
 }
 
