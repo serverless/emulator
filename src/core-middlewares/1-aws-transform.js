@@ -1,4 +1,4 @@
-// functions to get the data into the necessary shape so that the Local Emulator
+// functions to get the data into the necessary shape so that the Emulator
 // can work with AWS services (e.g. Lambda functions)
 
 /* eslint-disable no-use-before-define */
