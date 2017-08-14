@@ -3,4 +3,4 @@
 rm -rf ~/.serverless/local-emulator
 mkdir -p ~/.serverless/local-emulator/storage
 
-cp -r ./examples/storage/functions ~/.serverless/local-emulator/storage/functions
+cp -r ./examples/functions ~/.serverless/local-emulator/storage/functions
