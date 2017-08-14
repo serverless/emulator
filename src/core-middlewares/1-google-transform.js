@@ -74,21 +74,12 @@ const preInvoke = (data) => {
   return Promise.resolve(transformedData);
 };
 
-const postInvoke = (data) => {
+const postInvoke = async (data) => {
   const transformedData = R.clone(data);
   const { input } = transformedData;
 
-  if (isProvider('google', input)) {
-    if (input.errorData) {
-      // TODO implement Google Cloud Functions error logic here
-      transformedData.output.errorData = {
-        type: 'Google Error',
-        message: transformedData.input.errorData,
-      };
-    }
-  }
-
-  transformedData.output.outputData = transformedData.input.outputData;
+  transformedData.output.errorData = input.errorData;
+  transformedData.output.outputData = input.outputData;
   return Promise.resolve(transformedData);
 };
 
