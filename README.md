@@ -124,8 +124,8 @@ The Local Emulator needs those file to e.g. make decision which [middlewares](#m
 
 Here's a list with different example functions and their corresponding provider-related `function.json` config files:
 
-- [Example AWS function](./storage/functions/my-service-function-aws-1)
-- [Example Google function](./storage/functions/my-service-function-google-1)
+- [Example AWS function](./examples/storage/functions/my-service-function-aws-1)
+- [Example Google function](./examples/storage/functions/my-service-function-google-1)
 
 ### Function invocation
 

@@ -2,7 +2,4 @@ node_modules
 dist
 .idea/
 
-storage/functions/**
-!storage/functions/my-service
-
 .eslintcache
