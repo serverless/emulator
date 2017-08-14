@@ -23,7 +23,26 @@ const preLoad = (data) => {
     // for functions written in Node.js
     if (isRuntime('node', input)) {
       // set the provider related default environment variables
-      const defaultEnvVars = {};
+      const FUNCTION_TRIGGER_TYPE = 'CLOUD_PUBSUB_TRIGGER';
+      // TODO if (input.functionConfig.eventType === 'http') FUNCTION_TRIGGER_TYPE = 'HTTP_TRIGGER';
+      const defaultEnvVars = {
+        WORKER_PORT: '8091',
+        GCLOUD_PROJECT: `${input.functionConfig.project}`,
+        FUNCTION_NAME: `${input.functionConfig.functionName}`,
+        SUPERVISOR_HOSTNAME: '192.168.1.1',
+        PWD: '/user_code',
+        FUNCTION_TRIGGER_TYPE,
+        SHLVL: '1',
+        CODE_LOCATION: '/user_code',
+        FUNCTION_MEMORY_MB: `${input.functionConfig.memorySize}`,
+        GCP_PROJECT: `${input.functionConfig.project}`,
+        PORT: '8080',
+        SUPERVISOR_INTERNAL_PORT: '8081',
+        ENTRY_POINT: `${functionPropPath}`,
+        OLDPWD: '/var/tmp/worker',
+        _: '/usr/bin/env',
+        HOME: '/tmp',
+      };
       transformedData.output.env = R.merge(transformedData.output.env, defaultEnvVars);
     }
   }
