@@ -1,7 +1,10 @@
 {
-  "handler": "helloWorld",
   "provider": "google",
+  "project": "my-gcf-project",
   "runtime": "nodejs",
+  "functionName": "function-google-1",
+  "handler": "helloWorld",
+  "memorySize": 1024,
   "env": {
     "REGION": "us-central1",
     "FUNCTION_NAME": "function-google-1",
