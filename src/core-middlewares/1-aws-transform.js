@@ -112,19 +112,12 @@ const preInvoke = (data) => {
   return Promise.resolve(transformedData);
 };
 
-const postInvoke = (data) => {
+const postInvoke = async (data) => {
   const transformedData = R.clone(data);
   const { input } = transformedData;
 
-  if (isProvider('aws', input)) {
-    if (transformedData.input.errorData) {
-      transformedData.output.errorData = {
-        errorMessage: input.errorData,
-      };
-    }
-  }
-
-  transformedData.output.outputData = transformedData.input.outputData;
+  transformedData.output.errorData = input.errorData;
+  transformedData.output.outputData = input.outputData;
   return Promise.resolve(transformedData);
 };
 

@@ -25,13 +25,7 @@ async function invokeFunction(functionId, functionConfig, container, payload) {
   const postInvokeOutput = await runMiddlewares('postInvoke', postInvokeInput);
 
   if (errorData) {
-    let error;
-    try {
-      error = JSON.parse(postInvokeOutput.errorData);
-    } catch (e) {
-      error = postInvokeOutput.errorData;
-    }
-    return error;
+    throw new Error(postInvokeOutput.errorData);
   }
 
   let result;
