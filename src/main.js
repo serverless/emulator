@@ -15,7 +15,7 @@ import readFunctionConfigFile from './utils/readFunctionConfigFile';
 import generateContainer from './utils/generateContainer';
 import invokeFunction from './utils/invokeFunction';
 
-process.title = 'Serverless Local Emulator';
+process.title = 'Serverless Emulator';
 
 async function run() {
   const app = new Koa();
@@ -87,7 +87,7 @@ async function run() {
 
   app.listen(port, () => {
     // eslint-disable-next-line
-    console.log(`Local Emulator listening on: http://localhost:${port}`);
+    console.log(`Emulator listening on: http://localhost:${port}`);
   });
 }
 

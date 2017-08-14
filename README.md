@@ -1,4 +1,4 @@
-# Local Emulator
+# Emulator
 
 [![serverless](http://public.serverless.com/badges/v3.svg)](http://www.serverless.com)
 [![Build Status](https://travis-ci.org/serverless/emulator.svg?branch=master)](https://travis-ci.org/serverless/emulator)
@@ -32,7 +32,7 @@
 
 1. Clone the repository
 1. Run `npm install` to install all dependencies
-1. Run `scripts/sync-storage` to sync the [example `storage` artifacts](./storage) with the Local Emulators `storage` location
+1. Run `scripts/sync-storage` to sync the [example `storage` artifacts](./storage) with the Emulators `storage` location
 1. Run `npm run build` to build the project (the build artifacts can be found in `dist`)
 1. Run `npm start` to start the emulator
 
@@ -47,44 +47,44 @@ Spinning up the Docker container is as easy as `docker-compose run -p 4002:4002 
 Or, if you need a build a Docker image and run it, do:
 
 ```
-docker build -t local-emulator .
-docker run --rm -it -p 4002:4002 local-emulator
+docker build -t emulator .
+docker run --rm -it -p 4002:4002 emulator
 ```
 
-## Using the Local Emulator
+## Using the Emulator
 
-The following documents provide some insights on how to configure and use the Local Emulator.
+The following documents provide some insights on how to configure and use the Emulator.
 
 ### Options
 
-The Local Emulator can be configured with the following options you can pass in via the CLI:
+The Emulator can be configured with the following options you can pass in via the CLI:
 
 - `--port` - `number` - Optional port (defaults to `4002`)
 
-### Starting the Local Emulator
+### Starting the Emulator
 
 | Command | Description |
 | --- | --- |
-| `npm start` | Will start the Local Emulator at `localhost` with the default port |
-| `npm start -- --port 4711` | Starts the local Emulator at `localhost` with the port `4711` |
+| `npm start` | Will start the Emulator at `localhost` with the default port |
+| `npm start -- --port 4711` | Starts the Emulator at `localhost` with the port `4711` |
 
 ## Functionality
 
 ### General
 
-The Local Emulator is a software which makes it possible to emulate different cloud provider FaaS offerings (such as AWS Lambda or Google Cloud Functions) on your local machine in an offline-focused manner.
+The Emulator is a software which makes it possible to emulate different cloud provider FaaS offerings (such as AWS Lambda or Google Cloud Functions) on your local machine in an offline-focused manner.
 
 It can be used to deploy and invoke serverless functions w/o the need to go through the process of setting up and configuring a cloud provider account or deploying the functions into the infrastructure before being able to use them.
 
 This enables new ways of doing offline-first serverless development with a way faster feedback loop.
 
-Technically speaking the Local Emulator is a long running process (Daemon) which exposes an API and accepts different calls to API endpoints in order to perform actions and control its behavior.
+Technically speaking the Emulator is a long running process (Daemon) which exposes an API and accepts different calls to API endpoints in order to perform actions and control its behavior.
 
-**Note:** The API is only used to control the Local Emulator. It is **NOT** the same as an API Gateway.
+**Note:** The API is only used to control the Emulator. It is **NOT** the same as an API Gateway.
 
 ### Function deployment
 
-Functions are deployed via the [API](#apis) and are stored in the `~/.serverless/local-emulator` directory according to the following filesystem structure:
+Functions are deployed via the [API](#apis) and are stored in the `~/.serverless/emulator` directory according to the following filesystem structure:
 
 ```
 |__ storage
@@ -104,7 +104,7 @@ The `code` directory is the place where the actual (unzipped) function code is s
 
 The `function.json` file contains important information about the function configuration (e.g. what `runtime` this function uses or which `provider` it's written for) and other metadata.
 
-The proposed directory structure makes it easy for the Local Emulator to follow a convention-over-configuration approach where artifacts are stored in a predictable way without having to introduce a local DB with state information about all the deployed functions and services.
+The proposed directory structure makes it easy for the Emulator to follow a convention-over-configuration approach where artifacts are stored in a predictable way without having to introduce a local DB with state information about all the deployed functions and services.
 
 On every function deployment the following happens behind the scenes:
 
@@ -118,9 +118,9 @@ Every function needs information about its configuration. This information is pa
 
 Upon deployment this data is persisted in the `function.json` file.
 
-The `function.json` files can be found in `~/.serverless/local-emulator/storage/functions/<function-id>`.
+The `function.json` files can be found in `~/.serverless/emulator/storage/functions/<function-id>`.
 
-The Local Emulator needs those file to e.g. make decision which [middlewares](#middlewares) to execute or which runtime-specific wrapper to use.
+The Emulator needs those file to e.g. make decision which [middlewares](#middlewares) to execute or which runtime-specific wrapper to use.
 
 Here's a list with different example functions and their corresponding provider-related `function.json` config files:
 
@@ -129,13 +129,13 @@ Here's a list with different example functions and their corresponding provider-
 
 ### Function invocation
 
-When invoking a function the Local Emulator will simply look for the function directory (see above how the naming schema helps with the lookup), determines the `provider`, `runtime` and `handler` based on the config in the `function.json` file and starts the execution phase which will happen in a dedicated child process (more on that later).
+When invoking a function the Emulator will simply look for the function directory (see above how the naming schema helps with the lookup), determines the `provider`, `runtime` and `handler` based on the config in the `function.json` file and starts the execution phase which will happen in a dedicated child process (more on that later).
 
-The invocation data is extracted from the incoming API requested and passed to a so-called runtime-specific "wrapper script" via `stdin`. This "wrapper script" is responsible to setup the execution environment, require the function and pass the event payload to the function (you can think of it as a language specific container). Furthermore it will marshall the returned data and pass it back to the Local Emulators parent process which will then transform it into a JSON format and sends it back via an API response.
+The invocation data is extracted from the incoming API requested and passed to a so-called runtime-specific "wrapper script" via `stdin`. This "wrapper script" is responsible to setup the execution environment, require the function and pass the event payload to the function (you can think of it as a language specific container). Furthermore it will marshall the returned data and pass it back to the Emulators parent process which will then transform it into a JSON format and sends it back via an API response.
 
-The whole invocation happens in a `child_process.spawn()` call to ensure that the Local Emulator won't crash when a function misbehaves.
+The whole invocation happens in a `child_process.spawn()` call to ensure that the Emulator won't crash when a function misbehaves.
 
-This abstraction layer makes it easy to introduce other runtimes later on. Furthermore the way the incoming event data is handled by the Local Emulator is always the same and independent of the function handler signature since the wrapper encapsulates the logic to marshall and unmarshall the data which is handed over to the function.
+This abstraction layer makes it easy to introduce other runtimes later on. Furthermore the way the incoming event data is handled by the Emulator is always the same and independent of the function handler signature since the wrapper encapsulates the logic to marshall and unmarshall the data which is handed over to the function.
 
 Here's a sample call to invoke an AWS function within the wrapper script (which is written in Node.js). It will require and prepare the function (according to the CLI `options`) and pass the echoed data as the function parameters (via `stdin`) to it:
 
@@ -147,13 +147,13 @@ echo '{ event: { foo: "bar" }, context: {}, callback: (error, result) => {} }' |
 
 ### Middlewares
 
-The Local Emulator provides a middleware concept which makes it possible to use custom code to modify the data which is used inside the Local Emulator when exercising core logic (e.g. setting up the execution environment, invoking functions, etc.).
+The Emulator provides a middleware concept which makes it possible to use custom code to modify the data which is used inside the Emulator when exercising core logic (e.g. setting up the execution environment, invoking functions, etc.).
 
-The core Local Emulators `runMiddleware` functionality ensures that the raw data object which is passed into it will be copied over into an `input` object and removed from the root of the object. Furthermore it creates a blank `output` object which can be used by middlewares to store the computed results.
+The core Emulators `runMiddlewares` functionality ensures that the raw data object which is passed into it will be copied over into an `input` object and removed from the root of the object. Furthermore it creates a blank `output` object which can be used by middlewares to store the computed results.
 
 Let's take a quick look at an example to see how this works behind the scenes.
 
-We assume that the data which is passed into the Local Emulators `runMiddleware` function has the following shape:
+We assume that the data which is passed into the Emulators `runMiddlewares` function has the following shape:
 
 ```javascript
 {
@@ -176,7 +176,7 @@ The data will be prepared and passed into the middlewares in the following forma
 
 Middlewares can do whatever they want with this data.
 
-However the computed result should be written into the `output` object since this is returned by the Local Emulators `runMiddlewares` function after all middlewares are executed.
+However the computed result should be written into the `output` object since this is returned by the Emulators `runMiddlewares` function after all middlewares are executed.
 
 Middlewares can be implemented against different lifecycle events. Right now the lifecycle events are:
 
@@ -315,7 +315,7 @@ Middlewares are loaded and executed in the following order:
 
 ## APIs
 
-The Local Emulator exposes different APIs which makes it possible to interact with it and perform specific actions.
+The Emulator exposes different APIs which makes it possible to interact with it and perform specific actions.
 
 Examples for such actions could e.g. be the deployment or invocation of functions.
 
@@ -323,7 +323,7 @@ Right now only an HTTP API is implemented. However other API types such as (g)RP
 
 ### HTTP API
 
-The Local Emulator exposes a HTTP API which makes it possible for other services to interact with it via HTTP calls.
+The Emulator exposes a HTTP API which makes it possible for other services to interact with it via HTTP calls.
 
 #### Functions
 
@@ -365,11 +365,11 @@ Response:
 
 Request:
 
-- `ping` - `string` - **required** The string the Local Emulator should return
+- `ping` - `string` - **required** The string the Emulator should return
 
 Response:
 
-- `pong` - `string` - The string the Local Emulator should return
+- `pong` - `string` - The string the Emulator should return
 - `timestamp` - `integer` - Timestamp which indicates when the response was computed
 
 
