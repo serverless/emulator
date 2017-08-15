@@ -81,8 +81,8 @@ async function run() {
     },
   };
 
-  app.use(router.post('/v0/emulator/api/function/deploy', functions.deploy));
-  app.use(router.post('/v0/emulator/api/function/invoke', functions.invoke));
+  app.use(router.post('/v0/emulator/api/functions/deploy', functions.deploy));
+  app.use(router.post('/v0/emulator/api/functions/invoke', functions.invoke));
   app.use(router.post('/v0/emulator/api/utils/heartbeat', utils.heartbeat));
 
   app.listen(port, () => {
