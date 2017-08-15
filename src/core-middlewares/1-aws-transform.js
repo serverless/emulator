@@ -33,9 +33,9 @@ const preLoad = async (data) => {
         LAMBDA_RUNTIME_DIR: '/var/runtime',
         AWS_REGION: input.functionConfig.region,
         AWS_DEFAULT_REGION: input.functionConfig.region,
-        AWS_LAMBDA_LOG_GROUP_NAME: `aws/lambda/${input.functionConfig.lambdaName}`,
+        AWS_LAMBDA_LOG_GROUP_NAME: `aws/lambda/${input.functionConfig.functionName}`,
         AWS_LAMBDA_LOG_STREAM_NAME: '2016/12/02/[$LATEST]f77ff5e4026c45bda9a9ebcec6bc9cad',
-        AWS_LAMBDA_FUNCTION_NAME: input.functionConfig.lambdaName,
+        AWS_LAMBDA_FUNCTION_NAME: input.functionConfig.functionName,
         AWS_LAMBDA_FUNCTION_MEMORY_SIZE: input.functionConfig.memorySize,
         AWS_LAMBDA_FUNCTION_VERSION: '$LATEST',
       };
@@ -82,11 +82,11 @@ const preInvoke = async (data) => {
       context: {
         awsRequestId: 'id',
         invokeid: 'id',
-        logGroupName: `aws/lambda/${input.functionConfig.lambdaName}`,
+        logGroupName: `aws/lambda/${input.functionConfig.functionName}`,
         logStreamName: '2015/09/22/[HEAD]13370a84ca4ed8b77c427af260',
         functionVersion: 'HEAD',
         isDefaultFunctionVersion: true,
-        functionName: input.functionConfig.lambdaName,
+        functionName: input.functionConfig.functionName,
         memoryLimitInMB: '1024',
         succeed(result) {
           return this.callback(null, result);
