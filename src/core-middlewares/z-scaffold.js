@@ -2,22 +2,22 @@
 
 import R from 'ramda';
 
-const preLoad = (data) => {
+const preLoad = async (data) => {
   const transformedData = R.clone(data);
   return Promise.resolve(transformedData);
 };
 
-const postLoad = (data) => {
+const postLoad = async (data) => {
   const transformedData = R.clone(data);
   return Promise.resolve(transformedData);
 };
 
-const preInvoke = (data) => {
+const preInvoke = async (data) => {
   const transformedData = R.clone(data);
   return Promise.resolve(transformedData);
 };
 
-const postInvoke = (data) => {
+const postInvoke = async (data) => {
   const transformedData = R.clone(data);
   return Promise.resolve(transformedData);
 };

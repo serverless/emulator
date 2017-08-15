@@ -7,7 +7,7 @@ import R from 'ramda';
 import getRuntimeFileExtension from '../utils/getRuntimeFileExtension';
 import { isProvider, isRuntime } from '../utils/middlewareHelpers';
 
-const preLoad = (data) => {
+const preLoad = async (data) => {
   const transformedData = R.clone(data);
   const { input } = transformedData;
 
@@ -50,12 +50,9 @@ const preLoad = (data) => {
   return Promise.resolve(transformedData);
 };
 
-const postLoad = (data) => {
-  const transformedData = data;
-  return Promise.resolve(transformedData);
-};
+const postLoad = async data => Promise.resolve(data);
 
-const preInvoke = (data) => {
+const preInvoke = async (data) => {
   const transformedData = R.clone(data);
   const { input } = transformedData;
 

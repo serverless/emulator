@@ -3,7 +3,7 @@
 import R from 'ramda';
 import getRuntimeExecName from '../utils/getRuntimeExecName';
 
-const preLoad = (data) => {
+const preLoad = async (data) => {
   const transformedData = R.clone(data);
   const { input } = transformedData;
 
@@ -21,19 +21,10 @@ const preLoad = (data) => {
   return Promise.resolve(transformedData);
 };
 
-const postLoad = (data) => {
-  const transformedData = R.clone(data);
-  return Promise.resolve(transformedData);
-};
+const postLoad = async data => Promise.resolve(data);
 
-const preInvoke = (data) => {
-  const transformedData = R.clone(data);
-  return Promise.resolve(transformedData);
-};
+const preInvoke = async data => Promise.resolve(data);
 
-const postInvoke = (data) => {
-  const transformedData = R.clone(data);
-  return Promise.resolve(transformedData);
-};
+const postInvoke = async data => Promise.resolve(data);
 
 export { preLoad, postLoad, preInvoke, postInvoke };

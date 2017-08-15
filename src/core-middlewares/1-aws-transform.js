@@ -51,9 +51,9 @@ const preLoad = async (data) => {
   return transformedData;
 };
 
-const postLoad = async data => data;
+const postLoad = async data => Promise.resolve(data);
 
-const preInvoke = (data) => {
+const preInvoke = async (data) => {
   const transformedData = R.clone(data);
   const { input } = transformedData;
 
