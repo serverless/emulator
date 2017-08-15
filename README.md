@@ -329,7 +329,7 @@ The Emulator exposes a HTTP API which makes it possible for other services to in
 
 ##### Deploy function
 
-`POST /v0/emulator/api/function/deploy`
+`POST /v0/emulator/api/functions/deploy`
 
 Request:
 
@@ -345,7 +345,7 @@ Response:
 
 ##### Invoke function
 
-`POST /v0/emulator/api/function/invoke`
+`POST /v0/emulator/api/functions/invoke`
 
 Request:
 
