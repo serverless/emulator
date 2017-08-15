@@ -50,7 +50,7 @@ async function run() {
       await writeFunctionConfigFile(functionConfig, functionId);
 
       // eslint-disable-next-line
-      console.log(`Function deployed: ${functionId}`);
+      console.log(`Function loaded: ${functionId}`);
 
       ctx.response.type = 'json';
       ctx.body = ctx.request.body;
