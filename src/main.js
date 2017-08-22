@@ -58,13 +58,15 @@ async function run() {
 
     invoke: async (ctx) => {
       const { payload, functionId } = ctx.request.body;
-
+      const containerConfig = { debug };
       const functionConfig = await readFunctionConfigFile(functionId);
-      const container = await generateContainer(functionId, functionConfig, { debug });
-      const result = await invokeFunction(functionId, functionConfig, container, payload);
+      const container = await generateContainer(functionId, functionConfig, containerConfig);
+      const result = await invokeContainer(container, payload);
 
-      ctx.response.type = 'json';
-      ctx.body = result;
+      if (result.type === 'response') {
+        ctx.response.type = 'json';
+        ctx.body = result.data;
+      }
     },
   };
 

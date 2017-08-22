@@ -5,7 +5,8 @@
 
 import R from 'ramda';
 import getRuntimeFileExtension from '../utils/getRuntimeFileExtension';
-import { isProvider, isRuntime } from '../utils/middlewareHelpers';
+import isProvider from '../utils/isProvider';
+import isRuntime from '../utils/isRuntime';
 
 const preLoad = (data) => {
   const transformedData = R.clone(data);
