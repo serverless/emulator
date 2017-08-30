@@ -56,6 +56,7 @@ const postLoad = async data => Promise.resolve(data);
 const preInvoke = async (data) => {
   const transformedData = R.clone(data);
   const { input } = transformedData;
+  const timeout = Number(input.functionConfig.timeout) || 6;
 
   if (isProvider('aws', input)) {
     const startTime = new Date();
@@ -98,7 +99,7 @@ const preInvoke = async (data) => {
           return this.callback(error, result);
         },
         getRemainingTimeInMillis() {
-          return (new Date()).valueOf() - startTime.valueOf();
+          return Math.max((timeout * 1000) - ((new Date()).valueOf() - startTime.valueOf()), 0);
         },
         // NOTE: this is just a quick fix / hack so that the methods above can access the callback
         callback,
